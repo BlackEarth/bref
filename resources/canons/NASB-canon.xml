@@ -1,6 +1,13 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <canon xmlns="http://blackearth.us/xml" name="NASB" lang="en">
-	<book name="Genesis" id="1">
+
+  <book name="-" id="0">
+    <title>-</title>
+    <pattern>-</pattern>
+    <chapters/>
+  </book>
+
+  <book name="Genesis" id="1">
 		<title></title>
 		<pattern></pattern>
 		<chapters>
@@ -55,8 +62,9 @@
 			<chapter vss="33" n="49"/>
 			<chapter vss="26" n="50"/>
 		</chapters>
-	</book>
-	<book name="Exodus" id="2">
+  </book>
+
+  <book name="Exodus" id="2">
 		<title></title>
 		<pattern></pattern>
 		<chapters>

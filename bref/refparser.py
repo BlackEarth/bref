@@ -1,9 +1,13 @@
 DEBUG = False
 
 import re
+
 from bl.dict import Dict
 from bxml.xml import XML
-from .ref import Ref, RefRange, RefList
+
+from .ref import Ref
+from .refrange import RefRange
+from .reflist import RefList
 from .book import Book
 from .canon import Canon
 
@@ -48,19 +52,6 @@ class RefParser(Dict):
             if md is not None:
                 return md.group(0)
                 
-    # def refstr_in_reflist(self, refstr, reflist):
-    #     bk, ch, vs = refstr.split('.')
-    #     ref = self.parse_one(refstr)[0]
-    #     for refrange in reflist:
-    #         if ref >= refrange[0] and ref <= refrange[1]:
-    #             return True
-    #     return False
-
-    # def parse_one(self, refstring, **args):
-    #     res = self.parse(refstring, **args)
-    #     if len(res) > 0:
-    #         return res[0]
-
     def parse(self, refstring, bk=None, **args):
         """Parses a reference string.
         Returns a list of Ref items, which are [startref, endref] to represent ranges.

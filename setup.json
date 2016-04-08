@@ -7,7 +7,7 @@
   "author_email": "sah@blackearthgroup.com",
   "license": "LGPL 3.0",
   "classifiers": [
-    "Development Status :: 1 - Alpha",
+    "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
     "Programming Language :: Python :: 3"

@@ -1,5 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <canon xmlns="http://blackearth.us/xml" name="NKJV" lang="en">
+
+  <book name="-" id="0">
+    <title>-</title>
+    <pattern>-</pattern>
+    <chapters/>
+  </book>
+
   <book name="The First Book of Moses Called Genesis" id="1">
     <title></title>
     <pattern></pattern>
@@ -56,6 +63,7 @@
       <chapter vss="26" n="50"/>
     </chapters>
   </book>
+
   <book name="The Second Book of Moses Called Exodus" id="2">
     <title></title>
     <pattern></pattern>
