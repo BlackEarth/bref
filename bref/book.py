@@ -1,28 +1,30 @@
 
-import ark
 from bl.dict import Dict
-from bl.xml import XML
-from bl.xbuilder import XBuilder
+from bxml import NS
+from bxml import XML
+from bxml.builder import Builder
 
 class Book(Dict):
 
     @classmethod
-    def from_xml(c, xml):
+    def from_xml(C, xml):
         xml.assertValid()
-        assert xml.root.tag == "{%(ark)s}book" % ark.NS
-        book = c(
-                id=xml.root.get('id'),
-                name=xml.root.get('name'),
-                title=xml.root.find('{%(ark)s}title' % ark.NS).text,
-                pattern=xml.root.find('{%(ark)s}pattern' % ark.NS).text,
-                chapters=[
-                    Dict(**chapter.attrib)
-                    for chapter in xml.root.find('{%(ark)s}chapters' % ark.NS).getchildren()
-                ])
+        assert xml.root.tag == "{%(bl)s}book" % NS
+        book = C(
+            id=xml.root.get('id'),
+            name=xml.root.get('name'),
+            title=xml.root.find('{%(bl)s}title' % NS).text,
+            pattern=xml.root.find('{%(bl)s}pattern' % NS).text,
+            chapters=[
+                Dict(**chapter.attrib)
+                for chapter in 
+                xml.root.find('{%(bl)s}chapters' % NS).getchildren()
+            ]
+        )
         return book
 
     def to_xml(self, fn=None, config=None):
-        E = Builder(default=ark.NS.ark, **ark.NS)._
+        E = Builder(default=NS.bl, **NS)._
         x = XML(fn=fn, config=config,
             root=E.book(
                 {'id': self.id,
@@ -33,3 +35,7 @@ class Book(Dict):
                     E.chapter(**chapter)
                     for chapter in self.chapters])))
         return x
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()

@@ -2,10 +2,10 @@ DEBUG = False
 
 import re
 from bl.dict import Dict
+from bxml.xml import XML
 from .ref import Ref, RefRange, RefList
 from .book import Book
 from .canon import Canon
-from bl.xml import XML
 
 class RefParser(Dict):
     """Tool to 
@@ -649,7 +649,6 @@ def test_parse():
     >>> rp.parse('2Jn.001.001 - Jude.001.025').display()        # it should handle refs correctly.
     [(u'2Jn 1:1', u'Jude 1:25')]
     """
-
 
 if __name__ == "__main__":
     import doctest

@@ -1,9 +1,5 @@
-# ref.py -- class for dealing with references
 
-DEBUG = False
-
-import re, functools, os.path
-from time import time
+import functools
 from bl.dict import Dict
 
 @functools.total_ordering
@@ -52,41 +48,6 @@ class Ref(Dict):
     def __eq__(self, other):
         return type(self) == type(other) and self.key() == other.key()
 
-
-@functools.total_ordering
-class RefRange(tuple):
-    """the type of the object returned by RefParser.parse_one() -- a tuple of two references representing a range."""
-
-    def __str__(self):
-        return "%s-%s" % (str(self[0]), str(self[1]))
-
-    def __repr__(self):
-        return "RefRange(%s, %s)" % (repr(self[0]), repr(self[1]))
-
-    def __lt__(self, other):
-        return (self[0] < other[0]) or (
-            (self[0]==other[0]) and 
-                (self[1] < other[1]))   # shorter ranges sort first
-
-    def __eq__(self, other):
-        return (self[0]==other[0]) and (self[1]==other[1])
-
-    def __hash__(self):
-        # if __eq__() true, __hash__() will be the same (though the inverse is not true)
-        return int(re.sub('\D', '', self[0].key()+self[1].key()))
-
-
-class RefList(list):
-    """the type of the object returned by RefParser.parse() -- a list of RefRanges."""
-
-    def __str__(self):
-        return "[%s]" % ', '.join([str(r) for r in self])
-
-    def __repr__(self):
-        return "RefList(%s)" % ', '.join([repr(r) for r in self])        
-
-
 if __name__ == "__main__":
-    DEBUG = False
     import doctest
     doctest.testmod()
