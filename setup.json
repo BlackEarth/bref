@@ -1,0 +1,25 @@
+{
+  "name": "bref",
+  "version": "0.1",
+  "description": "Reference parsing and formatting library.",
+  "url": "https://github.com/BlackEarth/bref",
+  "author": "Sean Harrison",
+  "author_email": "sah@blackearthgroup.com",
+  "license": "LGPL 3.0",
+  "classifiers": [
+    "Development Status :: 1 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
+    "Programming Language :: Python :: 3"
+  ],
+  "entry_points": {},
+  "install_requires": ["bl"],
+  "extras_require": {
+    "dev": [],
+    "test": []
+  },
+  "package_data": {
+    "": ["*.jar", "*.sql", "*.xml", "*.xsl", "*.md", "*.TEMPLATE"]
+    },
+  "data_files": []
+}
