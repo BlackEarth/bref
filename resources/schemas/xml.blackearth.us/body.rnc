@@ -1,0 +1,187 @@
+
+default namespace = "http://blackearth.us/xml"
+
+grammar {
+	include "patterns.rnc"		
+	include "text.rnc"			
+
+	## <body>
+
+	Body = element body { 
+		ClassAttribute?,
+		( BodyContent | BodyVar )*
+	}
+	BodyContent = ( Div | A | P | Hn | Table | Ol | Ul | Include )
+	BodyVar = element var { VarClassAttribute, BodyContent* }
+
+	## <div>
+
+	Div = element div {
+		CommonAttributes?,
+		( DivContent | DivVar )*
+	}
+	DivContent = ( Include | Div | P | Table | A | Img )
+	DivVar = element var { VarClassAttribute, DivContent* }
+
+	## <a>
+
+	A = element a {
+		CommonAttributes?,
+		attribute href { PathPattern }?,
+
+		( AContent | AVar )*
+	}
+	AContent = ( Img | Span | TextContent )
+	AVar = element var { VarClassAttribute, AContent* }
+	
+	## <a> as anchor only with no text
+	
+	Anchor = element a {
+		CommonAttributes?
+	}
+	
+	## <img>
+	
+	Img = element img {
+		attribute src { xsd:anyURI },	
+		attribute alt { xsd:token }?,
+		attribute height { ImageDimensionPattern }?,
+		attribute width { ImageDimensionPattern }?
+	}
+	
+	## <p>
+	
+	P = element p {
+		CommonAttributes?, TsAttribute?, TfAttribute?,
+		( PContent | PVar )*
+	}
+	PContent = ( Table | Span | Aside | A | Anchor | Img | TextContent )
+	PVar = element var { VarClassAttribute, PContent* }
+
+	## <h1,2,3,4,5,6>
+
+	Hn = ( element h1 { HAttributes, ( HContent | HVar )* }
+		 | element h2 { HAttributes, ( HContent | HVar )* }
+		 | element h3 { HAttributes, ( HContent | HVar )* }
+		 | element h4 { HAttributes, ( HContent | HVar )* }
+		 | element h5 { HAttributes, ( HContent | HVar )* }
+		 | element h6 { HAttributes, ( HContent | HVar )* } )
+    HAttributes = ( CommonAttributes?, TsAttribute?, TfAttribute? )
+    HContent = ( Span | Aside | A | Img | TextContent )
+    HVar = element var { VarClassAttribute, HContent* }
+
+	## <span>
+	
+	Span = element span {
+		CommonAttributes?, TsAttribute?, TfAttribute?,
+		( SpanContent | SpanVar )*
+	}
+	SpanContent = ( Span | A | Img | TextContent )
+	SpanVar = element var { VarClassAttribute, SpanContent* }
+	
+	## <aside>
+	
+	Aside = element aside {
+		CommonAttributes?,
+		( AsideContent | AsideVar )*
+	}
+	AsideContent = ( P | Span | A | Img | TextContent )
+	AsideVar = element var { VarClassAttribute, AsideContent* }
+	
+	## <table>
+	
+	Table = element table {
+		CommonAttributes?, TsAttribute?, TfAttribute?,
+		Colgroup?,
+		( Tr | TableVar )+
+	}
+	TableVar = element var { VarClassAttribute, Tr+ }
+
+	Colgroup = element colgroup {
+		Col*
+	}
+	
+	Col = element col {
+		TfAttribute
+	}
+	
+	Tr = element tr {
+		CommonAttributes?, TfAttribute?,
+		( Th | TrThVar | Td | TrTdVar )+
+	}
+	TrThVar = element var { VarClassAttribute, Th+ }
+	TrTdVar = element var { VarClassAttribute, Td+ }
+
+	Th = element th {
+		CommonAttributes?,
+		attribute rowspan { xsd:int }?,
+		attribute colspan { xsd:int }?,
+		# Either contains <p> or a non-breaking space
+		( ( ThContent | ThVar )* | X00a0 )
+	}
+	ThContent = ( P | Anchor )
+	ThVar = element var { VarClassAttribute, ( ThContent* | X00a0 )  }
+
+	X00a0 = element x00a0 { empty }
+
+	Td = element td {
+		CommonAttributes?, TfAttribute?,
+		attribute rowspan { xsd:int }?,
+		attribute colspan { xsd:int }?,
+		# Either contains <p> or a non-breaking space
+		( ( TdContent | TdVar )* | X00a0 )
+	}
+	TdContent = ( P | Ol | Ul | Anchor )
+	TdVar = element var { VarClassAttribute, ( TdContent* | X00a0 )  }
+
+	## Lists
+
+	Ol = element ol {
+		CommonAttributes?,
+		attribute start { xsd:string { pattern = "[A-Za-z0-9]" } }?,
+		attribute type { xsd:string { pattern = "[A-Za-z0-9]" } }?,
+		( Li | OlVar )*
+	}
+	OlVar = element var { VarClassAttribute, OlContent* }
+
+	Ul = element ul {
+		CommonAttributes?,
+		( Li | UlVar )*
+	}
+	UlVar = element var { VarClassAttribute, Li* }
+
+	Li = element li {
+		CommonAttributes?,
+		( LiContent | LiVar )*
+	}
+	LiContent = ( P | Ol | Ul )
+	LiVar = element var { VarClassAttribute, LiContent* }
+
+	## inclusion of xml within xml		
+	
+	Include = 
+		element include {
+			attribute src { PathPattern },
+			attribute id { xsd:ID}?, 
+			attribute xpath { xsd:normalizedString }?
+		}
+		
+
+	## Common Attributes
+	CommonAttributes = 
+		( IdAttribute?, ClassAttribute?, TitleAttribute?, LangAttribute? )
+
+	IdAttribute = attribute id { xsd:NCName }
+	ClassAttribute = attribute class { xsd:token }	
+	TitleAttribute = attribute title { xsd:string }
+	LangAttribute = attribute lang { xsd:string { pattern = "[a-z][a-z]" } }
+
+	## ts = typesetting style: store the style name from InDesign
+	## tf = typesetting format: store the formatting info from InDesign
+	
+	TsAttribute = attribute ts { xsd:string }
+	TfAttribute = attribute tf { xsd:string }
+
+	VarClassAttribute = attribute class { VarPattern }
+
+}

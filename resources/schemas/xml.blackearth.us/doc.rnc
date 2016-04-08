@@ -1,0 +1,58 @@
+
+default namespace = "http://blackearth.us/xml"
+
+grammar {
+	include "body.rnc"
+	include "patterns.rnc"		
+
+	start = Doc
+
+	Doc = 
+		element doc {
+			## @id - if present must be unique document-wide 
+			## @class - optional document class
+			## @src - the source of this document
+			## @var - the content variant that the document occurs with
+
+			attribute id { IDPattern }?,
+			attribute class { NamePattern }?,
+			attribute src { PathPattern }?,
+			attribute var { VarPattern }?,
+
+			Head,
+			Body+			
+		}
+
+	Head  =
+		element head {
+			Title+, 
+			( Css | Script | Meta )*
+		}
+
+	Title =
+		element title { 
+			## optional var attribute for content-variant titles
+			attribute var { VarPattern }?,
+			xsd:normalizedString 
+		}
+
+	Css = 
+		element css	{
+			attribute href { PathPattern }
+		}
+
+	Script = 
+		element script {
+			attribute src { PathPattern },
+			attribute type { xsd:normalizedString }?
+		}
+		
+	Meta = 
+		## generic metadata element, same syntax as in XHTML 
+		## (with limitations here)
+		element meta {
+			attribute name { xsd:NCName },
+			attribute content { xsd:normalizedString }
+		}
+			
+}

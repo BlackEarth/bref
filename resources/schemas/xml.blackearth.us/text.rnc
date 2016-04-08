@@ -1,0 +1,33 @@
+﻿# text.rnc -- text and special character elements
+
+default namespace = "http://blackearth.us/xml"
+
+grammar {
+
+	## defines running text in our XML files -- adds certain singleton elements
+	## to text, in order to deal with certain classes of unicode characters, 
+	## such as various kinds of spaces and special hyphens. We're using the 
+	## unicode character values as the element names for special characters.
+	
+	TextContent = 
+		( text
+		| element tab { empty }			# tab character
+		| element x2028 { empty }		# line separator
+		| element x00a0 { empty }		# non-breaking space
+		| element x00ad { empty }		# discretionary hyphen
+		| element x2001 { empty }		# flush space
+		| element x2002 { empty }		# en space
+		| element x2003 { empty }		# em space
+		| element x2004 { empty }		# third space
+		| element x2005 { empty }		# quarter space
+		| element x2006 { empty }		# sixth space
+		| element x2007 { empty }		# figure space
+		| element x2008 { empty }		# punctuation space
+		| element x2009 { empty }		# thin space
+		| element x2011 { empty }		# non-breaking hyphen
+		| element x200a { empty }		# hair space
+		| element x200c { empty }		# zero-width non-joiner
+		| element x202f { empty }		# non-breaking space, fixed width
+		| element x3000 { empty }		# ideographic space
+		)*
+}
