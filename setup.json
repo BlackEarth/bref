@@ -13,7 +13,7 @@
     "Programming Language :: Python :: 3"
   ],
   "entry_points": {},
-  "install_requires": ["bl"],
+  "install_requires": ["bl", "bxml"],
   "extras_require": {
     "dev": [],
     "test": []
