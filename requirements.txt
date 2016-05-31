@@ -1,0 +1,3 @@
+-e git+https://github.com/BlackEarth/bl.git@master#egg=bl
+-e git+https://github.com/BlackEarth/bxml.git@master#egg=bxml
+-e git+http://github.com/BlackEarth/bf@master#egg=bf
