@@ -425,6 +425,11 @@ class RefParser(Dict):
         if DEBUG==True: print("fill range:", [(rng[0].bk, rng[0].ch, rng[0].vs), (rng[1].bk, rng[1].ch, rng[1].vs)])
         
         if rng[0].bk is not None:
+            for book in self.canon.books:
+                if book.name == rng[0].bk:
+                    for key in [key for key in book.keys() if key not in ['chapters', 'pattern', 'rexp']]:
+                        rng[0][key] = book[key]
+                    break
             if rng[0].ch is not None:
                 if rng[0].vs is not None:
                     if rng[1].vs is None: 
@@ -433,6 +438,11 @@ class RefParser(Dict):
                                 # rng[0] is full, rng[1] is empty, so the range is one verse
                                 status = "the range is one verse, make rng[1] = rng[0]"
                                 rng[1].bk = rng[0].bk
+                                for book in self.canon.books:
+                                    if book.name == rng[1].bk:
+                                        for key in [key for key in book.keys() if key not in ['chapters', 'pattern', 'rexp']]:
+                                            rng[0][key] = book[key]                                
+                                        break
                                 rng[1].ch = rng[0].ch
                                 rng[1].vs = rng[0].vs
                             else: 
