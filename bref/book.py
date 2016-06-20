@@ -8,7 +8,7 @@ class Book(Dict):
 
     @classmethod
     def from_xml(C, xml):
-        xml.assertValid()
+        # xml.assertValid()
         assert xml.root.tag == "{%(bl)s}book" % NS
         book = C(
             id=xml.root.get('id'),
@@ -21,6 +21,10 @@ class Book(Dict):
                 xml.root.find('{%(bl)s}chapters' % NS).getchildren()
             ]
         )
+        for e in [e for e in xml.root.xpath("*")
+                if e.tag.replace("{%(bl)s}" % NS, "") not in ['title', 'pattern', 'chapters']]:
+            attr = e.tag.replace("{%(bl)s}" % NS, "")
+            book[attr] = e.text
         return book
 
     def to_xml(self, fn=None, config=None):

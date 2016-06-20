@@ -13,7 +13,7 @@ class Canon(Dict):
 
     @classmethod
     def from_xml(C, xml):
-        xml.assertValid()
+        # xml.assertValid()
         assert xml.root.tag == "{%(bl)s}canon" % NS
         canon = C(
             name = xml.root.get('name'),
