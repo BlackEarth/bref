@@ -21,8 +21,8 @@ class RefParser(Dict):
     def __repr__(self):
         return "RefParser(%s)" % repr(self.canon)
 
-    def __init__(self, canonfn):
-        Dict.__init__(self, canon=Canon.from_xml(XML(fn=canonfn)))
+    def __init__(self, canon=None):
+        Dict.__init__(self, canon=Canon.from_xml(XML(fn=canon)))
         for book in self.canon.books:
             book.rexp = re.compile(book.pattern, flags=re.I+re.U)
 
