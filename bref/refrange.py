@@ -2,8 +2,8 @@
 import re, functools
 
 @functools.total_ordering
-class RefRange(tuple):
-    """the type of the object returned by RefParser.parse_one() -- a tuple of two references representing a range."""
+class RefRange(list):
+    """the type of the object returned by RefParser.parse_one() -- a list of two references representing a range."""
 
     def __str__(self):
         return "%s-%s" % (str(self[0]), str(self[1]))
