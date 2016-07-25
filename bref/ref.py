@@ -34,10 +34,7 @@ class Ref(Dict):
             k += self.name
         else:
             k += '000'
-        if self.wholech==True:      # give whole chapters a key of vs=0
-            k += "%03d000" % self.ch
-        else:
-            k += "%03d%03d%s" % (self.ch or 0, self.vs or 0, self.vsub or '')
+        k += "%03d%03d%s" % (self.ch or 0, self.vs or 0, self.vsub or '')
         return k
 
     # comparison operators
