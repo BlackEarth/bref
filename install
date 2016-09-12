@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# change to the script directory and calculate needed variables
+cd `dirname $0`; 
+PACKAGE_PATH=`pwd`; IFS='/'; read -ra ARR <<< "$PACKAGE_PATH"; IFS=';'	# IFS = internal field separator
+N=`expr ${#ARR[*]} - 1`
+PACKAGE_NAME=${ARR[$N]}				# package name, which is the name of this script's parent folder
+VENV=$HOME/.venv/$PACKAGE_NAME		# virtualenv location
+PYTHON=$VENV/bin/python 			# the virtualenv's python interpreter
+PACKAGE_PARAMS=$1					# any package config parameters can be passed via $1: JSON object string
+
+# create a python virtual environment for this package
+echo "creating virtual environment in $VENV"
+python3 -m virtualenv $VENV
+SYMLINK=$PACKAGE_PATH/venv 			# so you can type "source venv" in the package directory
+if [ -e $SYMLINK ]; then 
+	rm $SYMLINK
+fi
+ln -s $VENV/bin/activate $SYMLINK
+
+# install this package and its dependencies in the virtual environment
+echo "installing requirements from $PACKAGE_PATH/requirements.txt"
+$PYTHON -m pip install --upgrade pip || echo ""
+$PYTHON -m pip install -r $PACKAGE_PATH/requirements.txt || echo ""
+
+echo "installing $PACKAGE_PATH as editable"
+$PYTHON -m pip install -e "$PACKAGE_PATH" || exit 1
+
+$PYTHON $PACKAGE_PATH/setup.py install
+
+echo "Installation complete. 
+You can activate this package's virtualenv at the command prompt by typing
+	$ source venv
+in the package directory."
