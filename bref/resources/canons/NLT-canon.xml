@@ -1,16 +1,19 @@
 <?xml version='1.0' encoding='UTF-8'?>
+
 <canon xmlns="http://blackearth.us/xml" name="NLT" lang="en">
 
   <book name="-" id="0">
     <title>-</title>
-    <pattern>-</pattern>
-    <chapters/>
+		<pattern>-</pattern>
+		<abbr></abbr>
+		<chapters/>
   </book>
 
-  <book name="Genesis" id="1">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Gen" id="1">
+    <title>Genesis</title>
+		<pattern>\b(?:Gn|Ge\w*?)\b</pattern>
+		<abbr>Gen.</abbr>
+		<chapters>
       <chapter vss="31" n="1"/>
       <chapter vss="25" n="2"/>
       <chapter vss="24" n="3"/>
@@ -64,10 +67,11 @@
     </chapters>
   </book>
   
-  <book name="Exodus" id="2">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Exod" id="2">
+    <title>Exodus</title>
+		<pattern>\b(?:Ex\w*?)\b</pattern>
+		<abbr>Exod.</abbr>
+		<chapters>
       <chapter vss="22" n="1"/>
       <chapter vss="25" n="2"/>
       <chapter vss="22" n="3"/>
@@ -111,10 +115,11 @@
     </chapters>
   </book>
   
-  <book name="Leviticus" id="3">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Lev" id="3">
+    <title>Leviticus</title>
+		<pattern>\b(?:Lv|Le\w*?)\b</pattern>
+		<abbr>Lev.</abbr>
+		<chapters>
       <chapter vss="17" n="1"/>
       <chapter vss="16" n="2"/>
       <chapter vss="17" n="3"/>
@@ -145,10 +150,11 @@
     </chapters>
   </book>
   
-  <book name="Numbers" id="4">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Num" id="4">
+    <title>Numbers</title>
+		<pattern>\b(?:Nm|Nu\w*?)\b</pattern>
+		<abbr>Num.</abbr>
+		<chapters>
       <chapter vss="54" n="1"/>
       <chapter vss="30" n="2"/>
       <chapter vss="51" n="3"/>
@@ -188,10 +194,11 @@
     </chapters>
   </book>
   
-  <book name="Deuteronomy" id="5">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Deut" id="5">
+    <title>Deuteronomy</title>
+		<pattern>\b(?:Dt|De\w*?|Duet\w*?)\b</pattern>
+		<abbr>Deut.</abbr>
+		<chapters>
       <chapter vss="46" n="1"/>
       <chapter vss="37" n="2"/>
       <chapter vss="29" n="3"/>
@@ -229,10 +236,11 @@
     </chapters>
   </book>
   
-  <book name="Joshua" id="6">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Josh" id="6">
+    <title>Joshua</title>
+		<pattern>\b(?:Jsh|Jos\w*?)\b</pattern>
+		<abbr>Josh.</abbr>
+		<chapters>
       <chapter vss="18" n="1"/>
       <chapter vss="24" n="2"/>
       <chapter vss="17" n="3"/>
@@ -260,10 +268,11 @@
     </chapters>
   </book>
   
-  <book name="Judges" id="7">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Judg" id="7">
+    <title>Judges</title>
+		<pattern>\b(?:Ju?d?g\w*?)\b</pattern>
+		<abbr>Judg.</abbr>
+		<chapters>
       <chapter vss="36" n="1"/>
       <chapter vss="23" n="2"/>
       <chapter vss="31" n="3"/>
@@ -289,9 +298,10 @@
   </book>
   
   <book name="Ruth" id="8">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+    <title>Ruth</title>
+		<pattern>\b(?:R[ut]|Rut|Ruth)\b</pattern>
+		<abbr>Ruth</abbr>
+		<chapters>
       <chapter vss="22" n="1"/>
       <chapter vss="23" n="2"/>
       <chapter vss="18" n="3"/>
@@ -299,10 +309,11 @@
     </chapters>
   </book>
   
-  <book name="1 Samuel" id="9">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="1Sam" id="9">
+    <title>1 Samuel</title>
+		<pattern>\b(?:(?:1|I)\s*?S[am]\w*?)\b</pattern>
+		<abbr>1 Sam.</abbr>
+		<chapters>
       <chapter vss="28" n="1"/>
       <chapter vss="36" n="2"/>
       <chapter vss="22" n="3"/>
@@ -337,10 +348,11 @@
     </chapters>
   </book>
   
-  <book name="2 Samuel" id="10">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="2Sam" id="10">
+    <title>2 Samuel</title>
+		<pattern>\b(?:(?:2|II)\s*S[am]\w*?)\b</pattern>
+		<abbr>2 Sam.</abbr>
+		<chapters>
       <chapter vss="27" n="1"/>
       <chapter vss="32" n="2"/>
       <chapter vss="39" n="3"/>
@@ -368,10 +380,11 @@
     </chapters>
   </book>
   
-  <book name="1 Kings" id="11">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="1Kgs" id="11">
+    <title>1 Kings</title>
+		<pattern>\b(?:(?:1|I)\s*K\w*?)\b</pattern>
+		<abbr>1 Kgs.</abbr>
+		<chapters>
       <chapter vss="53" n="1"/>
       <chapter vss="46" n="2"/>
       <chapter vss="28" n="3"/>
@@ -397,10 +410,11 @@
     </chapters>
   </book>
   
-  <book name="2 Kings" id="12">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="2Kgs" id="12">
+    <title>2 Kings</title>
+		<pattern>\b(?:(?:2|II)\s*K\w*?)\b</pattern>
+		<abbr>2 Kgs.</abbr>
+		<chapters>
       <chapter vss="18" n="1"/>
       <chapter vss="25" n="2"/>
       <chapter vss="27" n="3"/>
@@ -429,10 +443,11 @@
     </chapters>
   </book>
   
-  <book name="1 Chronicles" id="13">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="1Chr" id="13">
+    <title>1 Chronicles</title>
+		<pattern>\b(?:(?:1|I)\s*C[hr]\w*?)\b</pattern>
+		<abbr>1 Chr.</abbr>
+		<chapters>
       <chapter vss="54" n="1"/>
       <chapter vss="55" n="2"/>
       <chapter vss="24" n="3"/>
@@ -465,10 +480,11 @@
     </chapters>
   </book>
   
-  <book name="2 Chronicles" id="14">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="2Chr" id="14">
+    <title>2 Chronicles</title>
+		<pattern>\b(?:(?:2|II)\s*C[hr]\w*?)\b</pattern>
+		<abbr>2 Chr.</abbr>
+		<chapters>
       <chapter vss="17" n="1"/>
       <chapter vss="18" n="2"/>
       <chapter vss="17" n="3"/>
@@ -509,9 +525,10 @@
   </book>
   
   <book name="Ezra" id="15">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+    <title>Ezra</title>
+		<pattern>\b(?:Ezra?|Esd\w*?)\b</pattern>
+		<abbr>Ezra</abbr>
+		<chapters>
       <chapter vss="11" n="1"/>
       <chapter vss="70" n="2"/>
       <chapter vss="13" n="3"/>
@@ -525,10 +542,11 @@
     </chapters>
   </book>
   
-  <book name="Nehemiah" id="16">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Neh" id="16">
+    <title>Nehemiah</title>
+		<pattern>\b(?:Ne\w*?)\b</pattern>
+		<abbr>Neh.</abbr>
+		<chapters>
       <chapter vss="11" n="1"/>
       <chapter vss="20" n="2"/>
       <chapter vss="32" n="3"/>
@@ -545,10 +563,11 @@
     </chapters>
   </book>
   
-  <book name="Esther" id="17">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Esth" id="17">
+    <title>Esther</title>
+		<pattern>\b(?:Es|Est\w*?)\b</pattern>
+		<abbr>Esth.</abbr>
+		<chapters>
       <chapter vss="22" n="1"/>
       <chapter vss="23" n="2"/>
       <chapter vss="15" n="3"/>
@@ -563,9 +582,10 @@
   </book>
   
   <book name="Job" id="18">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+    <title>Job</title>
+		<pattern>\b(?:Jb|Job)\b</pattern>
+		<abbr>Job</abbr>
+		<chapters>
       <chapter vss="22" n="1"/>
       <chapter vss="13" n="2"/>
       <chapter vss="26" n="3"/>
@@ -611,10 +631,11 @@
     </chapters>
   </book>
   
-  <book name="Psalms" id="19">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Psa" id="19">
+    <title>Psalms</title>
+		<pattern>\b(?:Ps\w*?)\b</pattern>
+		<abbr>Ps.</abbr>
+		<chapters>
       <chapter vss="6" n="1"/>
       <chapter vss="12" n="2"/>
       <chapter vss="8" n="3"/>
@@ -768,10 +789,11 @@
     </chapters>
   </book>
   
-  <book name="Proverbs" id="20">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Prov" id="20">
+    <title>Proverbs</title>
+		<pattern>\b(?:Pr\w*?)\b</pattern>
+		<abbr>Prov.</abbr>
+		<chapters>
       <chapter vss="33" n="1"/>
       <chapter vss="22" n="2"/>
       <chapter vss="35" n="3"/>
@@ -806,10 +828,11 @@
     </chapters>
   </book>
   
-  <book name="Ecclesiastes" id="21">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Eccl" id="21">
+    <title>Ecclesiastes</title>
+		<pattern>\b(?:Ecc?l?\w*?)\b</pattern>
+		<abbr>Eccl.</abbr>
+		<chapters>
       <chapter vss="18" n="1"/>
       <chapter vss="26" n="2"/>
       <chapter vss="22" n="3"/>
@@ -825,10 +848,11 @@
     </chapters>
   </book>
   
-  <book name="Song of Songs" id="22">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Song" id="22">
+    <title>Song of Songs</title>
+		<pattern>\b(?:Sg|So|SS|Song|Song of S|Ct|Ca)\w*?\b</pattern>
+		<abbr>Song</abbr>
+		<chapters>
       <chapter vss="17" n="1"/>
       <chapter vss="17" n="2"/>
       <chapter vss="11" n="3"/>
@@ -840,10 +864,11 @@
     </chapters>
   </book>
   
-  <book name="Isaiah" id="23">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Isa" id="23">
+    <title>Isaiah</title>
+		<pattern>\b(?:Is\w*?)\b</pattern>
+		<abbr>Isa.</abbr>
+		<chapters>
       <chapter vss="31" n="1"/>
       <chapter vss="22" n="2"/>
       <chapter vss="26" n="3"/>
@@ -913,10 +938,11 @@
     </chapters>
   </book>
   
-  <book name="Jeremiah" id="24">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Jer" id="24">
+    <title>Jeremiah</title>
+		<pattern>\b(?:Jr|Je|Jer\w*?)\b</pattern>
+		<abbr>Jer.</abbr>
+		<chapters>
       <chapter vss="19" n="1"/>
       <chapter vss="37" n="2"/>
       <chapter vss="25" n="3"/>
@@ -972,10 +998,11 @@
     </chapters>
   </book>
   
-  <book name="Lamentations" id="25">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Lam" id="25">
+    <title>Lamentations</title>
+		<pattern>\b(?:L[am]|Lam\w*?)\b</pattern>
+		<abbr>Lam.</abbr>
+		<chapters>
       <chapter vss="22" n="1"/>
       <chapter vss="22" n="2"/>
       <chapter vss="66" n="3"/>
@@ -984,10 +1011,11 @@
     </chapters>
   </book>
   
-  <book name="Ezekiel" id="26">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Ezek" id="26">
+    <title>Ezekiel</title>
+		<pattern>\b(?:Ez[ek]|Ezek\w*?)\b</pattern>
+		<abbr>Ezek.</abbr>
+		<chapters>
       <chapter vss="28" n="1"/>
       <chapter vss="10" n="2"/>
       <chapter vss="27" n="3"/>
@@ -1039,10 +1067,11 @@
     </chapters>
   </book>
   
-  <book name="Daniel" id="27">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Dan" id="27">
+    <title>Daniel</title>
+		<pattern>\b(?:Dn|Da|Dan\w*?)\b</pattern>
+		<abbr>Dan.</abbr>
+		<chapters>
       <chapter vss="21" n="1"/>
       <chapter vss="49" n="2"/>
       <chapter vss="30" n="3"/>
@@ -1058,10 +1087,11 @@
     </chapters>
   </book>
   
-  <book name="Hosea" id="28">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Hos" id="28">
+    <title>Hosea</title>
+		<pattern>\b(?:Hos?\w*?)\b</pattern>
+		<abbr>Hos.</abbr>
+		<chapters>
       <chapter vss="12" n="1"/>
       <chapter vss="23" n="2"/>
       <chapter vss="5" n="3"/>
@@ -1080,9 +1110,10 @@
   </book>
   
   <book name="Joel" id="29">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+    <title>Joel</title>
+		<pattern>\b(?:Jl|Joel?)\b</pattern>
+		<abbr>Joel</abbr>
+		<chapters>
       <chapter vss="20" n="1"/>
       <chapter vss="32" n="2"/>
       <chapter vss="21" n="3"/>
@@ -1090,9 +1121,10 @@
   </book>
   
   <book name="Amos" id="30">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+    <title>Amos</title>
+		<pattern>\b(?:Am|Amos)\b</pattern>
+		<abbr>Amos</abbr>
+		<chapters>
       <chapter vss="15" n="1"/>
       <chapter vss="16" n="2"/>
       <chapter vss="15" n="3"/>
@@ -1105,18 +1137,20 @@
     </chapters>
   </book>
   
-  <book name="Obadiah" id="31">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Obad" id="31">
+    <title>Obadiah</title>
+		<pattern>\b(?:Ob|Oba|Obad\w*?)\b</pattern>
+		<abbr>Obad.</abbr>
+		<chapters>
       <chapter vss="21" n="1"/>
     </chapters>
   </book>
   
-  <book name="Jonah" id="32">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Jon" id="32">
+    <title>Jonah</title>
+		<pattern>\b(?:Jnh|Jon\w*)\b</pattern>
+		<abbr>Jon.</abbr>
+		<chapters>
       <chapter vss="17" n="1"/>
       <chapter vss="10" n="2"/>
       <chapter vss="10" n="3"/>
@@ -1124,10 +1158,11 @@
     </chapters>
   </book>
   
-  <book name="Micah" id="33">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Mic" id="33">
+    <title>Micah</title>
+		<pattern>\b(Mi|Mc|(?:Mic\w*?))\b</pattern>
+		<abbr>Mic.</abbr>
+		<chapters>
       <chapter vss="16" n="1"/>
       <chapter vss="13" n="2"/>
       <chapter vss="12" n="3"/>
@@ -1138,49 +1173,54 @@
     </chapters>
   </book>
   
-  <book name="Nahum" id="34">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Nah" id="34">
+    <title>Nahum</title>
+		<pattern>\b(?:N[ah]\w*?)\b</pattern>
+		<abbr>Nah.</abbr>
+		<chapters>
       <chapter vss="15" n="1"/>
       <chapter vss="13" n="2"/>
       <chapter vss="19" n="3"/>
     </chapters>
   </book>
   
-  <book name="Habakkuk" id="35">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Hab" id="35">
+    <title>Habakkuk</title>
+		<pattern>\b(Ha|(?:Hab\w*?))\b</pattern>
+		<abbr>Hab.</abbr>
+		<chapters>
       <chapter vss="17" n="1"/>
       <chapter vss="20" n="2"/>
       <chapter vss="19" n="3"/>
     </chapters>
   </book>
   
-  <book name="Zephaniah" id="36">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Zeph" id="36">
+    <title>Zephaniah</title>
+		<pattern>\b(?:Zp|Zep\w*?)\b</pattern>
+		<abbr>Zeph.</abbr>
+		<chapters>
       <chapter vss="18" n="1"/>
       <chapter vss="15" n="2"/>
       <chapter vss="20" n="3"/>
     </chapters>
   </book>
   
-  <book name="Haggai" id="37">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Hagg" id="37">
+    <title>Haggai</title>
+		<pattern>\b(?:Ha?g\w*?)\b</pattern>
+		<abbr>Hagg.</abbr>
+		<chapters>
       <chapter vss="15" n="1"/>
       <chapter vss="23" n="2"/>
     </chapters>
   </book>
   
-  <book name="Zechariah" id="38">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Zech" id="38">
+    <title>Zechariah</title>
+		<pattern>\b(?:Zc|Zec\w*?)\b</pattern>
+		<abbr>Zech.</abbr>
+		<chapters>
       <chapter vss="21" n="1"/>
       <chapter vss="13" n="2"/>
       <chapter vss="10" n="3"/>
@@ -1198,10 +1238,11 @@
     </chapters>
   </book>
   
-  <book name="Malachi" id="39">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Mal" id="39">
+    <title>Malachi</title>
+		<pattern>\b(?:Ma?l\w*?)\b</pattern>
+		<abbr>Mal.</abbr>
+		<chapters>
       <chapter vss="14" n="1"/>
       <chapter vss="17" n="2"/>
       <chapter vss="18" n="3"/>
@@ -1209,10 +1250,11 @@
     </chapters>
   </book>
   
-  <book name="Matthew" id="40">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Matt" id="40">
+    <title>Matthew</title>
+		<pattern>\b(?:Ma?t\w*?)\b</pattern>
+		<abbr>Matt.</abbr>
+		<chapters>
       <chapter vss="25" n="1"/>
       <chapter vss="23" n="2"/>
       <chapter vss="17" n="3"/>
@@ -1245,9 +1287,10 @@
   </book>
   
   <book name="Mark" id="41">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+    <title>Mark</title>
+		<pattern>\b(?:Mk|Mar\w*?)\b</pattern>
+		<abbr>Mark</abbr>
+		<chapters>
       <chapter vss="45" n="1"/>
       <chapter vss="28" n="2"/>
       <chapter vss="35" n="3"/>
@@ -1268,9 +1311,10 @@
   </book>
   
   <book name="Luke" id="42">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+    <title>Luke</title>
+		<pattern>\b(?:L[uk]|Lu\w*?)\b</pattern>
+		<abbr>Luke</abbr>
+		<chapters>
       <chapter vss="80" n="1"/>
       <chapter vss="52" n="2"/>
       <chapter vss="38" n="3"/>
@@ -1299,9 +1343,10 @@
   </book>
   
   <book name="John" id="43">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+    <title>John</title>
+		<pattern>\b(?:Jn|John?)\b</pattern>
+		<abbr>John</abbr>
+		<chapters>
       <chapter vss="51" n="1"/>
       <chapter vss="25" n="2"/>
       <chapter vss="36" n="3"/>
@@ -1327,9 +1372,10 @@
   </book>
   
   <book name="Acts" id="44">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+    <title>Acts</title>
+		<pattern>\b(?:Ac|Acts)\b</pattern>
+		<abbr>Acts</abbr>
+		<chapters>
       <chapter vss="26" n="1"/>
       <chapter vss="47" n="2"/>
       <chapter vss="26" n="3"/>
@@ -1361,10 +1407,11 @@
     </chapters>
   </book>
   
-  <book name="Romans" id="45">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Rom" id="45">
+    <title>Romans</title>
+		<pattern>\b(?:R[om]|Ro\w*?)\b</pattern>
+		<abbr>Rom.</abbr>
+		<chapters>
       <chapter vss="32" n="1"/>
       <chapter vss="29" n="2"/>
       <chapter vss="31" n="3"/>
@@ -1384,10 +1431,11 @@
     </chapters>
   </book>
   
-  <book name="1 Corinthians" id="46">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="1Cor" id="46">
+    <title>1 Corinthians</title>
+		<pattern>\b(?:(?:1|I)\s*Co\w*?)\b</pattern>
+		<abbr>1 Cor.</abbr>
+		<chapters>
       <chapter vss="31" n="1"/>
       <chapter vss="16" n="2"/>
       <chapter vss="23" n="3"/>
@@ -1407,10 +1455,11 @@
     </chapters>
   </book>
   
-  <book name="2 Corinthians" id="47">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="2Cor" id="47">
+    <title>2 Corinthians</title>
+		<pattern>\b(?:(?:2|II)\s*Co\w*?)\b</pattern>
+		<abbr>2 Cor.</abbr>
+		<chapters>
       <chapter vss="24" n="1"/>
       <chapter vss="17" n="2"/>
       <chapter vss="18" n="3"/>
@@ -1427,10 +1476,11 @@
     </chapters>
   </book>
   
-  <book name="Galatians" id="48">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Gal" id="48">
+    <title>Galatians</title>
+		<pattern>\b(?:G[al]|Gal\w*?)\b</pattern>
+		<abbr>Gal.</abbr>
+		<chapters>
       <chapter vss="24" n="1"/>
       <chapter vss="21" n="2"/>
       <chapter vss="29" n="3"/>
@@ -1440,10 +1490,11 @@
     </chapters>
   </book>
   
-  <book name="Ephesians" id="49">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Eph" id="49">
+    <title>Ephesians</title>
+		<pattern>\b(?:Ep\w*?)\b</pattern>
+		<abbr>Eph.</abbr>
+		<chapters>
       <chapter vss="23" n="1"/>
       <chapter vss="22" n="2"/>
       <chapter vss="21" n="3"/>
@@ -1453,10 +1504,11 @@
     </chapters>
   </book>
   
-  <book name="Philippians" id="50">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Phil" id="50">
+    <title>Philippians</title>
+		<pattern>\b(?:Phl?p|Phil|Phil[li]\w*?)\b</pattern>
+		<abbr>Phil.</abbr>
+		<chapters>
       <chapter vss="30" n="1"/>
       <chapter vss="30" n="2"/>
       <chapter vss="21" n="3"/>
@@ -1464,10 +1516,11 @@
     </chapters>
   </book>
   
-  <book name="Colossians" id="51">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Col" id="51">
+    <title>Colossians</title>
+		<pattern>\b(?:Cl|Co|Col\w*?)\b</pattern>
+		<abbr>Col.</abbr>
+		<chapters>
       <chapter vss="29" n="1"/>
       <chapter vss="23" n="2"/>
       <chapter vss="25" n="3"/>
@@ -1475,10 +1528,11 @@
     </chapters>
   </book>
   
-  <book name="1 Thessalonians" id="52">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="1Th" id="52">
+    <title>1 Thessalonians</title>
+		<pattern>\b(?:(?:1|I)\s*T[hes]\w*?)\b</pattern>
+		<abbr>1 Thes.</abbr>
+		<chapters>
       <chapter vss="10" n="1"/>
       <chapter vss="20" n="2"/>
       <chapter vss="13" n="3"/>
@@ -1487,20 +1541,22 @@
     </chapters>
   </book>
   
-  <book name="2 Thessalonians" id="53">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="2Th" id="53">
+    <title>2 Thessalonians</title>
+		<pattern>\b(?:(?:2|II)\s*T[hes]\w*?)\b</pattern>
+		<abbr>2 Thes.</abbr>
+		<chapters>
       <chapter vss="12" n="1"/>
       <chapter vss="17" n="2"/>
       <chapter vss="18" n="3"/>
     </chapters>
   </book>
   
-  <book name="1 Timothy" id="54">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="1Tim" id="54">
+    <title>1 Timothy</title>
+		<pattern>\b(?:(?:1|I)\s*T(?:[im]|im\w*?))\b</pattern>
+		<abbr>1 Tim.</abbr>
+		<chapters>
       <chapter vss="20" n="1"/>
       <chapter vss="15" n="2"/>
       <chapter vss="16" n="3"/>
@@ -1510,10 +1566,11 @@
     </chapters>
   </book>
   
-  <book name="2 Timothy" id="55">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="2Tim" id="55">
+    <title>2 Timothy</title>
+		<pattern>\b(?:(?:2|II)\s*T(?:[im]|im\w*?))\b</pattern>
+		<abbr>2 Tim.</abbr>
+		<chapters>
       <chapter vss="18" n="1"/>
       <chapter vss="26" n="2"/>
       <chapter vss="17" n="3"/>
@@ -1522,27 +1579,30 @@
   </book>
   
   <book name="Titus" id="56">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+    <title>Titus</title>
+		<pattern>\b(?:T[it]|Tit\w*?)\b</pattern>
+		<abbr>Titus</abbr>
+		<chapters>
       <chapter vss="16" n="1"/>
       <chapter vss="15" n="2"/>
       <chapter vss="15" n="3"/>
     </chapters>
   </book>
   
-  <book name="Philemon" id="57">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Phlm" id="57">
+    <title>Philemon</title>
+		<pattern>\b(?:Phl?m|Phile\w*?)\b</pattern>
+		<abbr>Phlm.</abbr>
+		<chapters>
       <chapter vss="25" n="1"/>
     </chapters>
   </book>
   
-  <book name="Hebrews" id="58">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Heb" id="58">
+    <title>Hebrews</title>
+		<pattern>\b(?:H[eb]|Heb\w*?)\b</pattern>
+		<abbr>Heb.</abbr>
+		<chapters>
       <chapter vss="14" n="1"/>
       <chapter vss="18" n="2"/>
       <chapter vss="19" n="3"/>
@@ -1559,10 +1619,11 @@
     </chapters>
   </book>
   
-  <book name="James" id="59">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Jas" id="59">
+    <title>James</title>
+		<pattern>\b(?:Ja(?:[ms]?|m\w*?))\b</pattern>
+		<abbr>Jas.</abbr>
+		<chapters>
       <chapter vss="27" n="1"/>
       <chapter vss="26" n="2"/>
       <chapter vss="18" n="3"/>
@@ -1571,10 +1632,11 @@
     </chapters>
   </book>
   
-  <book name="1 Peter" id="60">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="1Pet" id="60">
+    <title>1 Peter</title>
+		<pattern>\b(?:(?:1|I)\s*P\w*?)\b</pattern>
+		<abbr>1 Pet.</abbr>
+		<chapters>
       <chapter vss="25" n="1"/>
       <chapter vss="25" n="2"/>
       <chapter vss="22" n="3"/>
@@ -1583,20 +1645,22 @@
     </chapters>
   </book>
   
-  <book name="2 Peter" id="61">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="2Pet" id="61">
+    <title>2 Peter</title>
+		<pattern>\b(?:(?:2|II)\s*P\w*?)\b</pattern>
+		<abbr>2 Pet.</abbr>
+		<chapters>
       <chapter vss="21" n="1"/>
       <chapter vss="22" n="2"/>
       <chapter vss="18" n="3"/>
     </chapters>
   </book>
   
-  <book name="1 John" id="62">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="1Jn" id="62">
+    <title>1 John</title>
+		<pattern>\b(?:(?:1|I)\s*J\w*?)\b</pattern>
+		<abbr>1 Jn.</abbr>
+		<chapters>
       <chapter vss="10" n="1"/>
       <chapter vss="29" n="2"/>
       <chapter vss="24" n="3"/>
@@ -1605,34 +1669,38 @@
     </chapters>
   </book>
   
-  <book name="2 John" id="63">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="2Jn" id="63">
+    <title>2 John</title>
+		<pattern>\b(?:(?:2|II)\s*J\w*?)\b</pattern>
+		<abbr>2 Jn.</abbr>
+		<chapters>
       <chapter vss="13" n="1"/>
     </chapters>
   </book>
   
-  <book name="3 John" id="64">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="3Jn" id="64">
+    <title>3 John</title>
+		<pattern>\b(?:(?:3|III)\s*J\w*?)\b</pattern>
+		<abbr>3 Jn.</abbr>
+		<chapters>
       <chapter vss="15" n="1"/>
     </chapters>
   </book>
   
   <book name="Jude" id="65">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+    <title>Jude</title>
+		<pattern>\b(?:Jd[es]|Jude?)\b</pattern>
+		<abbr>Jude</abbr>
+		<chapters>
       <chapter vss="25" n="1"/>
     </chapters>
   </book>
   
-  <book name="Revelation" id="66">
-    <title></title>
-    <pattern></pattern>
-    <chapters>
+  <book name="Rev" id="66">
+    <title>Revelation</title>
+		<pattern>\b(?:R[ev]|Re\w*?)\b</pattern>
+		<abbr>Rev.</abbr>
+		<chapters>
       <chapter vss="20" n="1"/>
       <chapter vss="29" n="2"/>
       <chapter vss="22" n="3"/>
