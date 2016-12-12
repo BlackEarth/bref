@@ -1,13 +1,13 @@
 {
   "name": "bref",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Reference parsing and formatting library. Designed for Bible references, but can be used for any reference with 'Book ch:vs' or 'Book ch.vs' format, where ch and vs are numbers.",
   "url": "https://github.com/BlackEarth/bref",
   "author": "Sean Harrison",
   "author_email": "sah@blackearthgroup.com",
   "license": "LGPL 3.0",
   "classifiers": [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
     "Programming Language :: Python :: 3"
