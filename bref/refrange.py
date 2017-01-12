@@ -14,7 +14,7 @@ class RefRange(list):
     def __lt__(self, other):
         return (self[0] < other[0]) or (
             (self[0]==other[0]) and 
-                (self[1] < other[1]))   # shorter ranges sort first
+                (self[1] > other[1]))   # longer ranges sort first
 
     def __eq__(self, other):
         return (self[0]==other[0]) and (self[1]==other[1])
