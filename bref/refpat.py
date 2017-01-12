@@ -53,7 +53,7 @@ def make_patterns(canon):
 
     return {'patterns': patterns, 'repeating': repeating, 'regexs': regexs}
 
-def tag_refs(text, patterns, refparser=None):
+def tag_refs_in_text(text, patterns, refparser=None):
     def repl_bref(md):
         txt = md.group(1)
         if refparser is not None:
@@ -72,3 +72,19 @@ def tag_refs(text, patterns, refparser=None):
         else:
             text = re.sub(regex, repl_bref, text)
     return text
+
+def tag_refs_in_xml(x, patterns, xpath=None, namespaces=None, refparser=None):
+    if xpath is None:
+        elements = x.xpath(x.root, "//*")
+    else:
+        elements = x.xpath(x.root, xpath, namespaces=namespaces)
+    for element in elements:
+        if e.text is not None and e.get('href') is None:
+            e.text = tag_refs(e.text, patterns)
+        if e.tail is not None:
+            e.tail = tag_refs(e.tail, patterns)
+    t = x.tostring().replace("&lt;ref&gt;", "<ref>").replace("&lt;/ref&gt;", "</ref>")
+    x.root = x.fromstring(t)
+    return x
+
+
