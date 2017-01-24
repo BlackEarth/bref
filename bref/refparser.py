@@ -72,7 +72,7 @@ class RefParser(Dict):
         * following references that lack a bookname take it from the previous reference
         """
         refstring = self.clean_refstring(refstring)
-        LOG.debug(refstring, '[' + (bk or '') + ']')
+        LOG.debug("%s %s" % (refstring, '[' + (bk or '') + ']'))
 
         tokens = re.split("([.,;\-] ?)", refstring)       # sequence of tokens
         
@@ -111,7 +111,7 @@ class RefParser(Dict):
         # state machine operates on each token and can access prev and next tokens
         for i in range(len(tokens)):
             token = tokens[i]
-            LOG.debug(token, "    expect =", str(expect), "    prev =", str(prev))
+            LOG.debug("token = %r\texpect = %r\tprev = %r" % (token, expect, prev))
                 
             if token == '.':                # .
                 if prev=='BOOK':
@@ -133,7 +133,7 @@ class RefParser(Dict):
                 crng = RefRange((Ref(), Ref()))
                 cref = crng[0]
                 cref.bk = prevref.bk
-                LOG.debug("  --> new crng =", str(crng))
+                LOG.debug("--> new crng = %r" % crng)
                 # if no previous token or previous token was a book, expect a book
                 if prev in [None, 'BOOK']:
                     expect = 'BOOK'
@@ -150,7 +150,7 @@ class RefParser(Dict):
             elif token == '-':              # -
                 # switch cref to crng[1]
                 cref = crng[1]
-                LOG.debug("  --> switch to crng[1] =", str(crng[1]))
+                LOG.debug("--> switch to crng[1] = %r" % crng[1])
                 # if the previous token was a book, expect a book
                 if prev == 'BOOK': expect = 'BOOK'
                 # if the previous token was a ch, expect a book or a ch
@@ -166,7 +166,7 @@ class RefParser(Dict):
                         #for k in book.keys(): cref[k] = book[k]
                         cref.bk = book.name
                         cref.id = book.id
-                        LOG.debug("  --> book =", book.name)
+                        LOG.debug("--> book = %r" % book.name)
                     # otherwise, the book is null
                     prev = 'BOOK'
                 elif expect == 'BOOKORCH':
@@ -177,17 +177,17 @@ class RefParser(Dict):
                         for k in book.keys(): cref[k] = book[k]
                         cref.bk = book.name
                         prev = 'BOOK'
-                        LOG.debug("  --> book =", book.name)
+                        LOG.debug("--> book = %r" % book.name)
                     # otherwise, assign it as the chapter for the cref
                     else:
                         if self.chapters_in(crng[0].bk) == 1 and token != '1':
                             cref.ch = '1'
                             cref.vs = self.get_vs(crng, token)
-                            LOG.debug("  --> vs =", token)
+                            LOG.debug("--> vs = %r" % token)
                             prev = 'VS'
                         else:
                             cref.ch = self.get_ch(crng, token)
-                            LOG.debug("  --> ch =", token)
+                            LOG.debug("--> ch = %r" % token)
                             prev = 'CH'
                 elif expect == 'CHORVS':
                     # either prev=='VS' followed by '-',
@@ -202,48 +202,48 @@ class RefParser(Dict):
                             book = trybook
                             for k in book.keys(): cref[k] = book[k]
                             cref.bk = book.name
-                            LOG.debug("  --> book =", book.name)
+                            LOG.debug("--> book = %r" % book.name)
                             prev = 'BOOK'
                         elif following == '.':
                             # the token is a ch
                             cref.ch = self.get_ch(crng, token)
-                            LOG.debug("  --> ch =", cref.ch)
+                            LOG.debug("--> ch = %r" % cref.ch)
                             prev = 'CH'
                         else:
                             # the token is a vs
                             cref.vs = self.get_vs(crng, token)
-                            LOG.debug("  --> vs =", cref.vs)
+                            LOG.debug("--> vs = %r" % cref.vs)
                             prev = 'VS'
                     # prev one ch book
                     elif prev=='BOOK': 
                         if self.chapters_in(cref.bk) == 1:
-                            LOG.debug("  one-chapter book=", cref.bk)
+                            LOG.debug("one-chapter book= %r" % cref.bk)
                             # it's a one-chapter book
                             if token != '1':
                                 cref.vs = self.get_vs(crng, token)
-                                LOG.debug("  --> vs =", token)
+                                LOG.debug("--> vs = %r" % token)
                                 prev = 'VS'
                             elif following == '.':
                                 cref.ch = self.get_ch(crng, token)
-                                LOG.debug("  --> ch =", token)
+                                LOG.debug("--> ch = %r" % token)
                                 prev = 'CH'
                             elif following in ['-', ',']:
                                 cref.vs = self.get_vs(crng, token)
-                                LOG.debug("  --> vs =", token)
+                                LOG.debug("--> vs = %r" % token)
                                 prev = 'VS'
                             else:
                                 cref.ch = self.get_ch(crng, token)
-                                LOG.debug("  --> ch =", token)
+                                LOG.debug("--> ch = %r" % token)
                                 prev = 'CH'
                         else:
                             # multi-chapter book, so this is a ch
                             cref.ch = self.get_ch(crng, token)
-                            LOG.debug("  --> ch =", token)
+                            LOG.debug("--> ch = %r" % token)
                             prev = 'CH'                            
                 elif expect == 'CH':
                     # the token is a ch
                     cref.ch = self.get_ch(crng, token)
-                    LOG.debug("  --> ch =", token)
+                    LOG.debug("--> ch = %r" % token)
                     prev = 'CH'
                 elif expect == 'VS':
                     trybook = self.match_book(token)
@@ -255,11 +255,11 @@ class RefParser(Dict):
                             for k in book.keys(): cref[k] = book[k]
                             cref.bk = book.name
                         cref.vs = cref.ch = None  # no ch assignment yet
-                        LOG.debug("  --> bk =", token)
+                        LOG.debug("--> bk = %r" % token)
                         prev = 'BOOK'
                     else:
                         cref.vs = self.get_vs(crng, token)
-                        LOG.debug("  --> vs =", token)
+                        LOG.debug("--> vs = %r" % token)
                         prev = 'VS'
                 # expect 'SEP' after a content token
                 expect = 'SEP'
@@ -272,11 +272,11 @@ class RefParser(Dict):
     def get_ch(self, crng, token):
         if token == 'F':
             r = self.parse("%s %s" % (crng[0].bk, str(int(crng[0].ch) + 1)))
-            LOG.debug("get_ch, F: r =", r)
+            LOG.debug("get_ch, F: r = %r" % r)
             return r[0][0].ch        
         elif token == 'FF':
             r = self.parse("%(bk)s" % crng[0])
-            LOG.debug("get_ch, FF: r =", r)
+            LOG.debug("get_ch, FF: r = %r" % r)
             return r[0][1].ch        
         else:
             return token
@@ -284,11 +284,11 @@ class RefParser(Dict):
     def get_vs(self, crng, token):
         if token == 'F':
             r = self.parse("%s %s:%s" % (crng[0].bk, crng[0].ch, str(int(crng[0].vs) + 1)))
-            LOG.debug("get_vs, F: r =", r)
+            LOG.debug("get_vs, F: r = %r" % r)
             return r[0][0].vs
         elif token == 'FF':
             r = self.parse("%(bk)s %(ch)s" % crng[0])
-            LOG.debug("get_vs, FF: r =", r)
+            LOG.debug("get_vs, FF: r = %r" % r)
             return r[0][1].vs
         else:
             return token
@@ -296,7 +296,7 @@ class RefParser(Dict):
 
     def append_range(self, rng, liste):
         rng = self.clean_up_range(rng)
-        LOG.debug("  --> append range =", str(rng))
+        LOG.debug("--> append range = %r" % rng)
         liste.append(rng)
 
     def create_range(self):
@@ -391,14 +391,14 @@ class RefParser(Dict):
             sub = re.search("[^0-9\W]+$", rng[0].vs)                                    # rng[0].vs
             intstr = self.clean_intstr(rng[0].vs)
             if sub is not None and type(intstr)==str and intstr in rng[0].vs: 
-                LOG.debug("  rng[0].vsub =", sub.group(0))
+                LOG.debug("rng[0].vsub = %r" % sub.group(0))
                 rng[0].vsub = sub.group(0)
             rng[0].vs = int(self.clean_intstr(rng[0].vs) or 1)
         if type(rng[1].vs) == str:
             sub = re.search("[^0-9\W]+$", rng[1].vs)                                    # rng[1].vs
             intstr = self.clean_intstr(rng[1].vs)
             if sub is not None and type(intstr)==str and intstr in rng[1].vs: 
-                LOG.debug("  rng[1].vsub =", sub.group(0))
+                LOG.debug("rng[1].vsub = %r" % sub.group(0))
                 rng[1].vsub = sub.group(0)
             rng[1].vs = int(self.clean_intstr(rng[1].vs) or self.verses_in(rng[1].bk, rng[1].ch))
         if rng[0].id is not None and rng[1].id is None:
@@ -425,8 +425,8 @@ class RefParser(Dict):
         >>> rp.fill_range(bible_ref.RefRange((bible_ref.Ref(db, bk='Gen', ch=3, vs=15), bible_ref.Ref(db, ch=4, vs=17)))).display()
         (u'Gen 3:15', u'Gen 4:17')
         """
-        LOG.debug("fill range:", [(rng[0].bk, rng[0].ch, rng[0].vs), (rng[1].bk, rng[1].ch, rng[1].vs)])
-        
+        LOG.debug("fill range: %r" % [(rng[0].bk, rng[0].ch, rng[0].vs), (rng[1].bk, rng[1].ch, rng[1].vs)])
+        status = None
         if rng[0].bk is not None:
             for book in self.canon.books:
                 if book.name == rng[0].bk:
@@ -497,8 +497,8 @@ class RefParser(Dict):
                     if rng[1].vs is None: 
                         rng[1].vs = self.verses_in(rng[1].bk, rng[1].ch)
                         status += ", rng[1].vs=%s is last vs in rng[1].ch" % str(rng[1].vs)
-        LOG.debug("=>", status)
-        LOG.debug("filled range:", [(rng[0].bk, rng[0].ch, rng[0].vs), (rng[1].bk, rng[1].ch, rng[1].vs)])
+        LOG.debug("=> %s" % status)
+        LOG.debug("filled range: %r" % [(rng[0].bk, rng[0].ch, rng[0].vs), (rng[1].bk, rng[1].ch, rng[1].vs)])
         rng[0].name = rng[0].bk
         rng[1].name = rng[1].bk
         return rng
