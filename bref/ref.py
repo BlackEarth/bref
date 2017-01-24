@@ -1,5 +1,6 @@
 
 import functools
+import re
 from bl.dict import Dict
 
 @functools.total_ordering
@@ -36,6 +37,19 @@ class Ref(Dict):
             k += '000'
         k += "%03d%03d%s" % (self.ch or 0, self.vs or 0, self.vsub or '')
         return k
+
+    @classmethod
+    def from_key(Class, key, canon):
+        """use a given canon to convert a key into a ref"""
+        id, ch, vs = [n.lstrip('0') for n in re.findall('(\d{3})', key)]
+        ref = Class(id=id, ch=ch, vs=vs)
+        md = re.search("([a-z]+)$", key, flags=re.I)
+        if md is not None:
+            ref.vsub = md.group(1)
+        for book in canon.books:
+            if str(book.id) == str(id):
+                ref.name = book.name
+        return ref
 
     # comparison operators
     
