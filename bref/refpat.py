@@ -73,16 +73,16 @@ def tag_refs_in_text(text, patterns, refparser=None):
             text = re.sub(regex, repl_bref, text)
     return text
 
-def tag_refs_in_xml(x, patterns, xpath=None, namespaces=None, refparser=None):
+def tag_refs_in_xml(x, patterns, xpath=None, namespaces=None):
     if xpath is None:
         elements = x.xpath(x.root, "//*")
     else:
         elements = x.xpath(x.root, xpath, namespaces=namespaces)
     for element in elements:
-        if e.text is not None and e.get('href') is None:
-            e.text = tag_refs(e.text, patterns)
-        if e.tail is not None:
-            e.tail = tag_refs(e.tail, patterns)
+        if element.text is not None and element.get('href') is None:
+            element.text = tag_refs_in_text(element.text, patterns)
+        if element.tail is not None:
+            element.tail = tag_refs_in_text(element.tail, patterns)
     t = x.tostring().replace("&lt;ref&gt;", "<ref>").replace("&lt;/ref&gt;", "</ref>")
     x.root = x.fromstring(t)
     return x
