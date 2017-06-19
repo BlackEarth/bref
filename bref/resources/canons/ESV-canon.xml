@@ -301,7 +301,7 @@
 
 	<book name="1Sam" id="9">
 		<title>1 Samuel</title>
-		<pattern>\b(?:(?:1|I)\s*?S[am]\w*?)\b</pattern>
+		<pattern>\b(?:1\s*?S[am]\w*?)\b</pattern>
 		<chapters>
 			<chapter vss="28" n="1"/>
 			<chapter vss="36" n="2"/>
@@ -339,7 +339,7 @@
 
 	<book name="2Sam" id="10">
 		<title>2 Samuel</title>
-		<pattern>\b(?:(?:2|II)\s*S[am]\w*?)\b</pattern>
+		<pattern>\b(?:2\s*S[am]\w*?)\b</pattern>
 		<chapters>
 			<chapter vss="27" n="1"/>
 			<chapter vss="32" n="2"/>
@@ -370,7 +370,7 @@
 
 	<book name="1Kgs" id="11">
 		<title>1 Kings</title>
-		<pattern>\b(?:(?:1|I)\s*K\w*?)\b</pattern>
+		<pattern>\b(?:1\s*K\w*?)\b</pattern>
 		<chapters>
 			<chapter vss="53" n="1"/>
 			<chapter vss="46" n="2"/>
@@ -399,7 +399,7 @@
 
 	<book name="2Kgs" id="12">
 		<title>2 Kings</title>
-		<pattern>\b(?:(?:2|II)\s*K\w*?)\b</pattern>
+		<pattern>\b(?:2\s*K\w*?)\b</pattern>
 		<chapters>
 			<chapter vss="18" n="1"/>
 			<chapter vss="25" n="2"/>
@@ -431,7 +431,7 @@
 
 	<book name="1Chr" id="13">
 		<title>1 Chronicles</title>
-		<pattern>\b(?:(?:1|I)\s*C[hr]\w*?)\b</pattern>
+		<pattern>\b(?:1\s*C[hr]\w*?)\b</pattern>
 		<chapters>
 			<chapter vss="54" n="1"/>
 			<chapter vss="55" n="2"/>
@@ -467,7 +467,7 @@
 
 	<book name="2Chr" id="14">
 		<title>2 Chronicles</title>
-		<pattern>\b(?:(?:2|II)\s*C[hr]\w*?)\b</pattern>
+		<pattern>\b(?:2\s*C[hr]\w*?)\b</pattern>
 		<chapters>
 			<chapter vss="17" n="1"/>
 			<chapter vss="18" n="2"/>
@@ -1386,7 +1386,7 @@
 
 	<book name="1Cor" id="46">
 		<title>1 Corinthians</title>
-		<pattern>\b(?:(?:1|I)\s*Co\w*?)\b</pattern>
+		<pattern>\b(?:1\s*Co\w*?)\b</pattern>
 		<chapters>
 			<chapter vss="31" n="1"/>
 			<chapter vss="16" n="2"/>
@@ -1409,7 +1409,7 @@
 
 	<book name="2Cor" id="47">
 		<title>2 Corinthians</title>
-		<pattern>\b(?:(?:2|II)\s*Co\w*?)\b</pattern>
+		<pattern>\b(?:2\s*Co\w*?)\b</pattern>
 		<chapters>
 			<chapter vss="24" n="1"/>
 			<chapter vss="17" n="2"/>
@@ -1477,7 +1477,7 @@
 
 	<book name="1Th" id="52">
 		<title>1 Thessalonians</title>
-		<pattern>\b(?:(?:1|I)\s*T[hes]\w*?)\b</pattern>
+		<pattern>\b(?:1\s*T[hes]\w*?)\b</pattern>
 		<chapters>
 			<chapter vss="10" n="1"/>
 			<chapter vss="20" n="2"/>
@@ -1489,7 +1489,7 @@
 
 	<book name="2Th" id="53">
 		<title>2 Thessalonians</title>
-		<pattern>\b(?:(?:2|II)\s*T[hes]\w*?)\b</pattern>
+		<pattern>\b(?:2\s*T[hes]\w*?)\b</pattern>
 		<chapters>
 			<chapter vss="12" n="1"/>
 			<chapter vss="17" n="2"/>
@@ -1499,7 +1499,7 @@
 
 	<book name="1Tim" id="54">
 		<title>1 Timothy</title>
-		<pattern>\b(?:(?:1|I)\s*T(?:[im]|im\w*?))\b</pattern>
+		<pattern>\b(?:1\s*T(?:[im]|im\w*?))\b</pattern>
 		<chapters>
 			<chapter vss="20" n="1"/>
 			<chapter vss="15" n="2"/>
@@ -1512,7 +1512,7 @@
 
 	<book name="2Tim" id="55">
 		<title>2 Timothy</title>
-		<pattern>\b(?:(?:2|II)\s*T(?:[im]|im\w*?))\b</pattern>
+		<pattern>\b(?:2\s*T(?:[im]|im\w*?))\b</pattern>
 		<chapters>
 			<chapter vss="18" n="1"/>
 			<chapter vss="26" n="2"/>
@@ -1573,7 +1573,7 @@
 
 	<book name="1Pet" id="60">
 		<title>1 Peter</title>
-		<pattern>\b(?:(?:1|I)\s*P\w*?)\b</pattern>
+		<pattern>\b(?:1\s*P\w*?)\b</pattern>
 		<chapters>
 			<chapter vss="25" n="1"/>
 			<chapter vss="25" n="2"/>
@@ -1585,7 +1585,7 @@
 
 	<book name="2Pet" id="61">
 		<title>2 Peter</title>
-		<pattern>\b(?:(?:2|II)\s*P\w*?)\b</pattern>
+		<pattern>\b(?:2\s*P\w*?)\b</pattern>
 		<chapters>
 			<chapter vss="21" n="1"/>
 			<chapter vss="22" n="2"/>
@@ -1595,7 +1595,7 @@
 
 	<book name="1Jn" id="62">
 		<title>1 John</title>
-		<pattern>\b(?:(?:1|I)\s*J\w*?)\b</pattern>
+		<pattern>\b(?:1\s*J\w*?)\b</pattern>
 		<chapters>
 			<chapter vss="10" n="1"/>
 			<chapter vss="29" n="2"/>
@@ -1607,7 +1607,7 @@
 
 	<book name="2Jn" id="63">
 		<title>2 John</title>
-		<pattern>\b(?:(?:2|II)\s*J\w*?)\b</pattern>
+		<pattern>\b(?:2\s*J\w*?)\b</pattern>
 		<chapters>
 			<chapter vss="13" n="1"/>
 		</chapters>
@@ -1615,7 +1615,7 @@
 
 	<book name="3Jn" id="64">
 		<title>3 John</title>
-		<pattern>\b(?:(?:3|III)\s*J\w*?)\b</pattern>
+		<pattern>\b(?:3\s*J\w*?)\b</pattern>
 		<chapters>
 			<chapter vss="15" n="1"/>
 		</chapters>
