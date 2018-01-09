@@ -19,7 +19,7 @@
     "test": []
   },
   "package_data": {
-    "": ["*.jar", "*.sql", "*.xml", "*.xsl", "*.md", "*.TEMPLATE"]
+    "bref": ["resources/canons/*.xml"]
     },
   "data_files": [],
   "scripts": []
