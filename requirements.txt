@@ -1,3 +1,9 @@
--e git+https://github.com/BlackEarth/bl.git@master#egg=bl
--e git+https://github.com/BlackEarth/bxml.git@master#egg=bxml
--e git+http://github.com/BlackEarth/bf@master#egg=bf
+-e git+https://github.com/BlackEarth/bf.git@8595a73b71543f407d51a27ca6318fd383c6c401#egg=bf
+-e git+https://github.com/BlackEarth/bl.git@27708be76b495d476a3de5cb4971fc406b1fbc93#egg=bl
+-e git+https://github.com/BlackEarth/bxml.git@65414564c12ae243c79c3c70b29d76f62b46edeb#egg=bxml
+cssselect==1.0.3
+cssutils==1.0.2
+libsass==0.13.4
+lxml==4.1.1
+six==1.11.0
+Unum==4.1.3
