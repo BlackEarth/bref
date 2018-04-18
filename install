@@ -4,7 +4,7 @@
 cd `dirname $0`
 PACKAGE_PATH=`pwd`
 PACKAGE_NAME=`basename $PACKAGE_PATH`
-VENV=$PACKAGE_PATH/.$PACKAGE_NAME		# virtualenv location
+VENV=$PACKAGE_PATH/.$PACKAGE_NAME	# virtualenv location as hidden subfolder
 PYTHON=$VENV/bin/python 			# the virtualenv's python interpreter
 PACKAGE_PARAMS=$1					# any package config parameters can be passed via $1: JSON object string
 
