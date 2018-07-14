@@ -21,7 +21,15 @@ class RefRange(list):
 
     def __hash__(self):
         # if __eq__() true, __hash__() will be the same (though the inverse is not true)
-        return int(re.sub('\D', '', self[0].key()+self[1].key()))
+        return int(re.sub(r'\D', '', self[0].key()+self[1].key()))
+
+    def key(self):
+        k1 = self[0].key()
+        k2 = self[1].key()
+        if k1==k2: 
+            return k1
+        else:
+            return "%s-%s" % (k1, k2)
 
 if __name__ == "__main__":
     import doctest
