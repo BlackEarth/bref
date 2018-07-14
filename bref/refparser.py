@@ -28,12 +28,15 @@ class RefParser(Dict):
         else:
             Dict.__init__(self, canon=Canon.from_xml(XML(fn=canon)))
         for book in self.canon.books:
-            book.rexp = re.compile(book.pattern, flags=re.I+re.U)
+            if book.pattern is not None:
+                book.rexp = re.compile(book.pattern, flags=re.I+re.U)
 
     def match_book(self, bkarg):
         """return the Book record for a given bk arg"""
         for book in self.canon.books:
-            if re.match(book.rexp, bkarg):
+            if book.name == bkarg or book.title == bkarg:
+                return book
+            elif book.rexp is not None and re.match(book.rexp, bkarg):
                 return book
 
     def chapters_in(self, bk):
