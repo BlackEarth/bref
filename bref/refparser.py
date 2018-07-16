@@ -34,7 +34,7 @@ class RefParser(Dict):
     def match_book(self, bkarg):
         """return the Book record for a given bk arg"""
         for book in self.canon.books:
-            if book.name == bkarg or book.title == bkarg:
+            if book.name == bkarg or book.title == bkarg or book.abbr == bkarg:
                 return book
             elif book.rexp is not None and re.match(book.rexp, bkarg):
                 return book
