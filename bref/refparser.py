@@ -323,6 +323,7 @@ class RefParser(Dict):
         u'SongofSongs.4.8-5.3'
         """
         if refstr is None: return None
+        refstr = re.sub(r"(^\W+|\W+$)", "", refstr)
         refstr = refstr.strip()                  # Remove leading and trailing whitespace
         refstr = refstr.strip('-,;.')            # leading and trailing separators
         refstr = refstr.replace(u'and', ',')
@@ -375,12 +376,13 @@ class RefParser(Dict):
         # refstr = refstr.replace('0 ', '0')
         # These number words are sometimes used in the ordinal book names 
         # (1 John, etc.).
-        refstr = re.sub('(?i)first\s*', '1', refstr)
-        refstr = re.sub('(?i)second\s*', '2', refstr)
-        refstr = re.sub('(?i)third\s*', '3', refstr)
+        refstr = re.sub(r'(?i)first\s*', '1', refstr)
+        refstr = re.sub(r'(?i)second\s*', '2', refstr)
+        refstr = re.sub(r'(?i)third\s*', '3', refstr)
         refstr = refstr.replace(' ', '.')
-        refstr = re.sub("Song\.[^0-9]*", "Song.", refstr)
-        refstr = re.sub("\.title", ".0", refstr, flags=re.I)
+        refstr = re.sub(r"Song\.[^0-9]*", "Song.", refstr)
+        refstr = re.sub(r"\.title", ".0", refstr, flags=re.I)
+        refstr = re.sub(r",\s*(heading|title)", "", refstr, flags=re.I)
         return refstr
 
 
