@@ -3,7 +3,7 @@ DEBUG = False
 import re, os, sys
 
 def book_pattern(canon):
-    return "(?:(?:" + "|".join([bk.pattern for bk in canon.books]) + ")\.?)"
+    return r"(?:(?:" + r"|".join([bk.pattern for bk in canon.books]) + r")\.?)"
 
 def book_replacer(canon, attr, flags=re.I):
     """create a function that can be used in re.sub() to replace a found book name with the given book attribute"""
@@ -21,31 +21,31 @@ def make_patterns(canon):
 
     # building blocks
     bkpat = book_pattern(canon)
-    fullbkpat = "\\b(?:" \
-                + "|".join([bk.title % bk for bk in canon.books]) \
-                + ")\\b"
-    chpat = "(?:[1-9][0-9]*[a-f]{0,2}\\b)"
-    vspat = "(?:[\.:]?[1-9][0-9]*[a-f]{0,2}\\b)"
-    sepat = "\\s*(?:[,\-\u2013\u2014]?)+\\s*"
-    sepatand = "\\s*(?:[,\-\u2013\u2014]?(?: and)?)+\\s*"
+    fullbkpat = r"\\b(?:" \
+                + r"|".join([bk.title % bk for bk in canon.books]) \
+                + r")\\b"
+    chpat = r"(?:[1-9][0-9]*[a-f]{0,2}\\b)"
+    vspat = r"(?:[\.:]?[1-9][0-9]*[a-f]{0,2}\\b)"
+    sepat = r"\\s*(?:[,\-\u2013\u2014]?)+\\s*"
+    sepatand = r"\\s*(?:[,\-\u2013\u2014]?(?: and)?)+\\s*"
 
     # == patterns == 
 
     # * full pattern
-    patterns += ["(?<!>)(" + bkpat + "\\s*" + chpat + vspat + "?(" + sepat + bkpat + "?\\s*" + chpat + vspat + "?)*" \
-                + "|" + chpat + vspat + "(?:" + sepat + chpat + vspat + "?)*)(?!</a>)"]
+    patterns += [r"(?<!>)(" + bkpat + r"\\s*" + chpat + vspat + r"?(" + sepat + bkpat + r"?\\s*" + chpat + vspat + r"?)*" \
+                + r"|" + chpat + vspat + r"(?:" + sepat + chpat + vspat + r"?)*)(?!</a>)"]
 
     # * "chapters" + chapter nums
-    patterns += ["\\b([Cc]hapters?\\s*" + chpat + "(?:" + sepat + chpat + ")*)"]
-    patterns += ["\\b([Cc]haps?\\.?\\s*" + chpat + "(?:" + sepat + chpat + ")*)"]
-    patterns += ["\\b([Cc]hs?\\.?\\s*" + chpat + "(?:" + sepat + chpat + ")*)"]
+    patterns += [r"\\b([Cc]hapters?\\s*" + chpat + r"(?:" + sepat + chpat + r")*)"]
+    patterns += [r"\\b([Cc]haps?\\.?\\s*" + chpat + r"(?:" + sepat + chpat + r")*)"]
+    patterns += [r"\\b([Cc]hs?\\.?\\s*" + chpat + r"(?:" + sepat + chpat + r")*)"]
 
     # * chapters without book names, after link and semi-colon
-    patterns += ["(?<=</a>; )(" + chpat + "(?:" + sepat + chpat + ")?)"]
+    patterns += [r"(?<=</a>; )(" + chpat + r"(?:" + sepat + chpat + r")?)"]
     repeating += [patterns.index(patterns[-1])]
 
     # * chapter number alone, followed by semi-colon and another bref
-    patterns += ["(" + chpat + """)(?=;\\s*<a href="\?bref=)"""]
+    patterns += [r"(" + chpat + r""")(?=;\\s*<a href="\?bref=)"""]
     repeating += [patterns.index(patterns[-1])]
 
     # compile all the patterns
@@ -58,9 +58,9 @@ def tag_refs_in_text(text, patterns, refparser=None):
         txt = md.group(1)
         if refparser is not None:
             refstr = refparser.refstring(refparser.parse(txt))
-            tagged = """<ref name="%s">%s</ref>""" % (refstr, txt)
+            tagged = r"""<ref name="%s">%s</ref>""" % (refstr, txt)
         else:
-            tagged = """<ref>%s</ref>""" % (txt,)
+            tagged = r"""<ref>%s</ref>""" % (txt,)
         return tagged
     # get the first item ref to provide a book as context
     for regex in patterns['regexs']:
