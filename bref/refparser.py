@@ -74,7 +74,10 @@ class RefParser(Dict):
         * whole books indicated by book name without chapter or verse numbers
         * following references that lack a bookname take it from the previous reference
         """
-        refstring = self.clean_refstring(refstring)
+        if re.match(r"^\d+$", refstring):
+            refstring = self.refstr_from_id(refstring)
+        else:
+            refstring = self.clean_refstring(refstring)
         LOG.debug("%s %s" % (refstring, '[' + (bk or '') + ']'))
 
         tokens = re.split("([.,;\-] ?)", refstring)       # sequence of tokens
@@ -592,6 +595,22 @@ class RefParser(Dict):
                 out += startrefstr + endrefstr
 
         return out
+
+    def refstr_from_id(self, id):
+        """given a ref id in the canon, return a reference string"""
+        idstr = re.sub(r'(^[^\d]+|[^\d]+$)', '', id)
+        if len(idstr) < 4:  # book
+            key = idstr.zfill(3) + '001001'
+            ref0 = Ref.from_key(key, self.canon)
+            return f"{ref0.name}"
+        elif len(idstr) < 7:  # ch
+            key = idstr.zfill(6) + '001'
+            ref0 = Ref.from_key(key, self.canon)
+            return f"{ref0.name}.{ref0.ch}"
+        else:  # vs
+            key = idstr.zfill(9)
+            ref0 = Ref.from_key(key, self.canon)
+            return f"{ref0.name}.{ref0.ch}.{ref0.vs}"
 
 
 def test_parse():
