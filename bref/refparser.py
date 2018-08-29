@@ -598,7 +598,9 @@ class RefParser(Dict):
 
     def refstr_from_id(self, id):
         """given a ref id in the canon, return a reference string"""
-        idstr = re.sub(r'(^[^\d]+|[^\d]+$)', '', id)
+        idstr = re.sub(r'(^[^\d]+|[^\d]+$)', '', id).replace('000000', '')
+        idstr = re.sub(r'000$', '', idstr)
+        idstr = re.sub(r'000$', '', idstr)
         if len(idstr) < 4:  # book
             key = idstr.zfill(3) + '001001'
             ref0 = Ref.from_key(key, self.canon)
