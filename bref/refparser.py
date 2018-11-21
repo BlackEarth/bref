@@ -388,6 +388,10 @@ class RefParser(Dict):
         refstr = re.sub(r"\.title", ".0", refstr, flags=re.I)
         refstr = re.sub(r",\s*(heading|title)", "", refstr, flags=re.I)
         refstr = re.sub(r"^The\W+", "", refstr)
+
+        # Pattern like 1-2Sam should become 1Sam-2Sam
+        refstr = re.sub(r"^(\d+)-(\d+)(\D+)", r"\1\3-\2\3", refstr)
+
         return refstr
 
 
