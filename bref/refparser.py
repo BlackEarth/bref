@@ -387,6 +387,7 @@ class RefParser(Dict):
         refstr = re.sub(r"Song\.[^0-9]*", "Song.", refstr)
         refstr = re.sub(r"\.title", ".0", refstr, flags=re.I)
         refstr = re.sub(r",\s*(heading|title)", "", refstr, flags=re.I)
+        refstr = re.sub(r"^The\W+", "", refstr)
         return refstr
 
 
