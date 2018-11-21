@@ -327,6 +327,7 @@ class RefParser(Dict):
         """
         if refstr is None: return None
         refstr = re.sub(r"(^\W+|\W+$)", "", refstr)
+        refstr = re.sub(r"[\(\)\[\]\{\}\<\>]", "", refstr)  # remove brackets and parens
         refstr = refstr.strip()                  # Remove leading and trailing whitespace
         refstr = refstr.strip('-,;.')            # leading and trailing separators
         refstr = refstr.replace(u'and', ',')
