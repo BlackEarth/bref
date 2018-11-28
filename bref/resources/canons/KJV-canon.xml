@@ -299,7 +299,7 @@
     </chapters>
   </book>
 
-  <book name="1 Samuel" id="9">
+  <book name="1Samuel" id="9">
     <title></title>
     <pattern></pattern>
     <chapters>
@@ -337,7 +337,7 @@
     </chapters>
   </book>
 
-  <book name="2 Samuel" id="10">
+  <book name="2Samuel" id="10">
     <title></title>
     <pattern></pattern>
     <chapters>
@@ -368,7 +368,7 @@
     </chapters>
   </book>
 
-  <book name="1 Kings" id="11">
+  <book name="1Kings" id="11">
     <title></title>
     <pattern></pattern>
     <chapters>
@@ -397,7 +397,7 @@
     </chapters>
   </book>
 
-  <book name="2 Kings" id="12">
+  <book name="2Kings" id="12">
     <title></title>
     <pattern></pattern>
     <chapters>
@@ -429,7 +429,7 @@
     </chapters>
   </book>
 
-  <book name="1 Chronicles" id="13">
+  <book name="1Chronicles" id="13">
     <title></title>
     <pattern></pattern>
     <chapters>
@@ -465,7 +465,7 @@
     </chapters>
   </book>
 
-  <book name="2 Chronicles" id="14">
+  <book name="2Chronicles" id="14">
     <title></title>
     <pattern></pattern>
     <chapters>
@@ -825,7 +825,7 @@
     </chapters>
   </book>
 
-  <book name="Song of Solomon" id="22">
+  <book name="Song" id="22">
     <title></title>
     <pattern></pattern>
     <chapters>
@@ -1384,7 +1384,7 @@
     </chapters>
   </book>
 
-  <book name="1 Corinthians" id="46">
+  <book name="1Corinthians" id="46">
     <title></title>
     <pattern></pattern>
     <chapters>
@@ -1407,7 +1407,7 @@
     </chapters>
   </book>
 
-  <book name="2 Corinthians" id="47">
+  <book name="2Corinthians" id="47">
     <title></title>
     <pattern></pattern>
     <chapters>
@@ -1475,7 +1475,7 @@
     </chapters>
   </book>
 
-  <book name="1 Thessalonians" id="52">
+  <book name="1Thessalonians" id="52">
     <title></title>
     <pattern></pattern>
     <chapters>
@@ -1487,7 +1487,7 @@
     </chapters>
   </book>
 
-  <book name="2 Thessalonians" id="53">
+  <book name="2Thessalonians" id="53">
     <title></title>
     <pattern></pattern>
     <chapters>
@@ -1497,7 +1497,7 @@
     </chapters>
   </book>
 
-  <book name="1 Timothy" id="54">
+  <book name="1Timothy" id="54">
     <title></title>
     <pattern></pattern>
     <chapters>
@@ -1510,7 +1510,7 @@
     </chapters>
   </book>
 
-  <book name="2 Timothy" id="55">
+  <book name="2Timothy" id="55">
     <title></title>
     <pattern></pattern>
     <chapters>
@@ -1571,7 +1571,7 @@
     </chapters>
   </book>
 
-  <book name="1 Peter" id="60">
+  <book name="1Peter" id="60">
     <title></title>
     <pattern></pattern>
     <chapters>
@@ -1583,7 +1583,7 @@
     </chapters>
   </book>
 
-  <book name="2 Peter" id="61">
+  <book name="2Peter" id="61">
     <title></title>
     <pattern></pattern>
     <chapters>
@@ -1593,7 +1593,7 @@
     </chapters>
   </book>
 
-  <book name="1 John" id="62">
+  <book name="1John" id="62">
     <title></title>
     <pattern></pattern>
     <chapters>
@@ -1605,7 +1605,7 @@
     </chapters>
   </book>
 
-  <book name="2 John" id="63">
+  <book name="2John" id="63">
     <title></title>
     <pattern></pattern>
     <chapters>
@@ -1613,7 +1613,7 @@
     </chapters>
   </book>
 
-  <book name="3 John" id="64">
+  <book name="3John" id="64">
     <title></title>
     <pattern></pattern>
     <chapters>
