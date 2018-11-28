@@ -12,6 +12,7 @@ from .canon import Canon
 
 LOG = logging.getLogger(__name__)
 
+
 class RefParser(Dict):
     """Tool to 
         * tell if a string is a Ref, 
@@ -23,13 +24,13 @@ class RefParser(Dict):
         return "RefParser(%s)" % repr(self.canon)
 
     def __init__(self, canon=None):
-        if type(canon)==Canon:
+        if type(canon) == Canon:
             self.canon = canon
         else:
             Dict.__init__(self, canon=Canon.from_xml(XML(fn=canon)))
         for book in self.canon.books:
             if book.pattern is not None:
-                book.rexp = re.compile(book.pattern, flags=re.I+re.U)
+                book.rexp = re.compile(book.pattern, flags=re.I + re.U)
 
     def match_book(self, bkarg):
         """return the Book record for a given bk arg"""
@@ -43,14 +44,14 @@ class RefParser(Dict):
         """return the number of chapters in a given book"""
         book = self.match_book(bk)
         return len(book.chapters)
-                
+
     def verses_in(self, bk, ch):
         """return the number of verses in a given book and chapter"""
         book = self.match_book(bk)
-        if len(book.chapters) < int(ch)-1:
+        if len(book.chapters) < int(ch) - 1:
             return 0
         else:
-            return int(book.chapters[int(ch)-1].vss)
+            return int(book.chapters[int(ch) - 1].vss)
 
     def clean_intstr(self, intstr=None):
         """return a string that will convert cleanly to an int"""
@@ -58,7 +59,7 @@ class RefParser(Dict):
             md = re.search("[0-9]+", str(intstr))
             if md is not None:
                 return md.group(0)
-                
+
     def parse(self, refstring, bk=None, **args):
         """Parses a reference string.
         Returns a list of Ref items, which are [startref, endref] to represent ranges.
@@ -80,24 +81,24 @@ class RefParser(Dict):
             refstring = self.clean_refstring(refstring)
         LOG.debug("%s %s" % (refstring, '[' + (bk or '') + ']'))
 
-        tokens = re.split("([.,;\-] ?)", refstring)       # sequence of tokens
-        
+        tokens = re.split("([.,;\-] ?)", refstring)  # sequence of tokens
+
         # look for 'f' or 'ff' at the end of numeric tokens
-        for i in range(len(tokens)-1, 0, -1):           # count backwards to avoid conflict
+        for i in range(len(tokens) - 1, 0, -1):  # count backwards to avoid conflict
             if re.match("^[0-9]+f$", tokens[i], re.I):
                 tokens[i] = re.sub('f', '', tokens[i], re.I)
-                tokens.insert(i+1, '-')
-                tokens.insert(i+2, 'F')                 # special token: get the next ch or vs number.
+                tokens.insert(i + 1, '-')
+                tokens.insert(i + 2, 'F')  # special token: get the next ch or vs number.
             elif re.match("^[0-9]+ff$", tokens[i], re.I):
                 tokens[i] = re.sub('f', '', tokens[i], re.I)
-                tokens.insert(i+1, '-')
-                tokens.insert(i+2, 'FF')                # special token: get the last ch or vs number.
+                tokens.insert(i + 1, '-')
+                tokens.insert(i + 2, 'FF')  # special token: get the last ch or vs number.
 
         # either bk is a parameter or the first token, or this is not a reference
         if self.match_book(tokens[0]) is None:
-            if bk is None :
+            if bk is None:
                 return RefList()
-            else:   # bk is not None
+            else:  # bk is not None
                 trybook = self.match_book(bk)
                 if trybook is not None:
                     # insert the book and sep at beginning of token list
@@ -110,31 +111,33 @@ class RefParser(Dict):
         cref = crng[0]
 
         # initial conditions
-        prev = None         # the type of the previous token
+        prev = None  # the type of the previous token
         book = Book()
-        expect = 'BOOK'   # start by looking for a book token
+        expect = 'BOOK'  # start by looking for a book token
 
         # state machine operates on each token and can access prev and next tokens
         for i in range(len(tokens)):
             token = tokens[i]
             LOG.debug("token = %r\texpect = %r\tprev = %r" % (token, expect, prev))
-                
-            if token == '.':                # .
-                if prev=='BOOK':
+
+            if token == '.':  # .
+                if prev == 'BOOK':
                     # if one chapter book, expect ch or vs
-                    if self.chapters_in(book.name)==1:
+                    if self.chapters_in(book.name) == 1:
                         expect = 'CHORVS'
                     # otherwise, expect ch
                     else:
                         expect = 'CH'
-                elif prev=='CH':
+                elif prev == 'CH':
                     expect = 'VS'
-            elif re.match("^(?:ch|chap|chapter)?s?$", token, re.I):      # the word "chapter" or some form thereof
-                expect= 'CH'
-            elif token in [';', ',']:              # ; or , -- slightly different, but some overlap as well
+            elif re.match(
+                "^(?:ch|chap|chapter)?s?$", token, re.I
+            ):  # the word "chapter" or some form thereof
+                expect = 'CH'
+            elif token in [';', ',']:  # ; or , -- slightly different, but some overlap as well
                 # add crng to reflist and initialize new range
                 self.append_range(crng, reflist)
-                
+
                 prevref = cref
                 crng = RefRange((Ref(), Ref()))
                 cref = crng[0]
@@ -144,32 +147,35 @@ class RefParser(Dict):
                 if prev in [None, 'BOOK']:
                     expect = 'BOOK'
                 # if the previous token was a ch, expect a book or a ch
-                elif prev =='CH':
+                elif prev == 'CH':
                     expect = 'BOOKORCH'
                 # if prev was a vs, depends on whether it's ; or ,
                 else:
                     if token == ',':
                         expect = 'VS'
-                        cref.ch = prevref.ch                        
+                        cref.ch = prevref.ch
                     if token == ';':
                         expect = 'BOOKORCH'
-            elif token == '-':              # -
+            elif token == '-':  # -
                 # switch cref to crng[1]
                 cref = crng[1]
                 LOG.debug("--> switch to crng[1] = %r" % crng[1])
                 # if the previous token was a book, expect a book
-                if prev == 'BOOK': expect = 'BOOK'
+                if prev == 'BOOK':
+                    expect = 'BOOK'
                 # if the previous token was a ch, expect a book or a ch
-                elif prev == 'CH': expect = 'BOOKORCH'
+                elif prev == 'CH':
+                    expect = 'BOOKORCH'
                 # if the previous token was a vs, expect a ch or a vs (depends on following token)
-                elif prev == 'VS': expect = 'CHORVS'
-            else:                           # content token
+                elif prev == 'VS':
+                    expect = 'CHORVS'
+            else:  # content token
                 if expect == 'BOOK':
                     # if the token matches a book, then assign it as the book for cref
                     trybook = self.match_book(token)
                     if trybook is not None:
                         book = trybook
-                        #for k in book.keys(): cref[k] = book[k]
+                        # for k in book.keys(): cref[k] = book[k]
                         cref.bk = book.name
                         cref.id = book.id
                         LOG.debug("--> book = %r" % book.name)
@@ -180,7 +186,8 @@ class RefParser(Dict):
                     trybook = self.match_book(token)
                     if trybook is not None:
                         book = trybook
-                        for k in book.keys(): cref[k] = book[k]
+                        for k in book.keys():
+                            cref[k] = book[k]
                         cref.bk = book.name
                         prev = 'BOOK'
                         LOG.debug("--> book = %r" % book.name)
@@ -199,14 +206,17 @@ class RefParser(Dict):
                     # either prev=='VS' followed by '-',
                     # or prev=='BOOK'
                     # set up following token
-                    if i+1 < len(tokens): following = tokens[i+1]
-                    else: following = None
+                    if i + 1 < len(tokens):
+                        following = tokens[i + 1]
+                    else:
+                        following = None
                     # prev vs
-                    if prev=='VS' and tokens[i-1]=='-':
+                    if prev == 'VS' and tokens[i - 1] == '-':
                         trybook = self.match_book(token)
                         if trybook is not None:
                             book = trybook
-                            for k in book.keys(): cref[k] = book[k]
+                            for k in book.keys():
+                                cref[k] = book[k]
                             cref.bk = book.name
                             LOG.debug("--> book = %r" % book.name)
                             prev = 'BOOK'
@@ -221,7 +231,7 @@ class RefParser(Dict):
                             LOG.debug("--> vs = %r" % cref.vs)
                             prev = 'VS'
                     # prev one ch book
-                    elif prev=='BOOK': 
+                    elif prev == 'BOOK':
                         if self.chapters_in(cref.bk) == 1:
                             LOG.debug("one-chapter book= %r" % cref.bk)
                             # it's a one-chapter book
@@ -245,7 +255,7 @@ class RefParser(Dict):
                             # multi-chapter book, so this is a ch
                             cref.ch = self.get_ch(crng, token)
                             LOG.debug("--> ch = %r" % token)
-                            prev = 'CH'                            
+                            prev = 'CH'
                 elif expect == 'CH':
                     # the token is a ch
                     cref.ch = self.get_ch(crng, token)
@@ -258,7 +268,8 @@ class RefParser(Dict):
                         trybook = self.match_book(token)
                         if trybook is not None:
                             book = trybook
-                            for k in book.keys(): cref[k] = book[k]
+                            for k in book.keys():
+                                cref[k] = book[k]
                             cref.bk = book.name
                         cref.vs = cref.ch = None  # no ch assignment yet
                         LOG.debug("--> bk = %r" % token)
@@ -269,8 +280,8 @@ class RefParser(Dict):
                         prev = 'VS'
                 # expect 'SEP' after a content token
                 expect = 'SEP'
-        
-        # close out last range 
+
+        # close out last range
         self.append_range(crng, reflist)
 
         return reflist
@@ -279,14 +290,14 @@ class RefParser(Dict):
         if token == 'F':
             r = self.parse("%s %s" % (crng[0].bk, str(int(crng[0].ch) + 1)))
             LOG.debug("get_ch, F: r = %r" % r)
-            return r[0][0].ch        
+            return r[0][0].ch
         elif token == 'FF':
             r = self.parse("%(bk)s" % crng[0])
             LOG.debug("get_ch, FF: r = %r" % r)
-            return r[0][1].ch        
+            return r[0][1].ch
         else:
             return token
-        
+
     def get_vs(self, crng, token):
         if token == 'F':
             r = self.parse("%s %s:%s" % (crng[0].bk, crng[0].ch, str(int(crng[0].vs) + 1)))
@@ -299,7 +310,6 @@ class RefParser(Dict):
         else:
             return token
 
-
     def append_range(self, rng, liste):
         rng = self.clean_up_range(rng)
         LOG.debug("--> append range = %r" % rng)
@@ -308,7 +318,7 @@ class RefParser(Dict):
     def create_range(self):
         rng = RefRange((Ref(), Ref()))
         return rng
-        
+
     def refstring(self, ref):
         return self.clean_refstring(self.format(ref))
 
@@ -325,11 +335,12 @@ class RefParser(Dict):
         >>> refparser.clean_refstring("Song of Songs 4 8 -- 5_3")
         u'SongofSongs.4.8-5.3'
         """
-        if refstr is None: return None
+        if refstr is None:
+            return None
         refstr = re.sub(r"(^\W+|\W+$)", "", refstr)
         refstr = re.sub(r"[\(\)\[\]\{\}\<\>]", "", refstr)  # remove brackets and parens
-        refstr = refstr.strip()                  # Remove leading and trailing whitespace
-        refstr = refstr.strip('-,;.')            # leading and trailing separators
+        refstr = refstr.strip()  # Remove leading and trailing whitespace
+        refstr = refstr.strip('-,;.')  # leading and trailing separators
         refstr = refstr.replace(u'and', ',')
         refstr = refstr.replace('; ', ';')
         refstr = refstr.replace(':', '.')
@@ -358,11 +369,16 @@ class RefParser(Dict):
         refstr = refstr.replace(u'\n', ';')
         refstr = refstr.replace(' -', '-')
         refstr = refstr.replace('- ', '-')
-        while ';;' in refstr: refstr=refstr.replace(';;', ';')
-        while '--' in refstr: refstr=refstr.replace('--', '-')
-        while '  ' in refstr: refstr=refstr.replace('  ', ' ')
-        while '..' in refstr: refstr=refstr.replace('..', '.')
-        while ',,' in refstr: refstr=refstr.replace(',,', ',')
+        while ';;' in refstr:
+            refstr = refstr.replace(';;', ';')
+        while '--' in refstr:
+            refstr = refstr.replace('--', '-')
+        while '  ' in refstr:
+            refstr = refstr.replace('  ', ' ')
+        while '..' in refstr:
+            refstr = refstr.replace('..', '.')
+        while ',,' in refstr:
+            refstr = refstr.replace(',,', ',')
         refstr = refstr.replace(u' ,', ',')
         refstr = refstr.replace(u', ', ',')
         refstr = refstr.replace(u' ;', ';')
@@ -378,7 +394,7 @@ class RefParser(Dict):
         # refstr = refstr.replace('8 ', '8')
         # refstr = refstr.replace('9 ', '9')
         # refstr = refstr.replace('0 ', '0')
-        # These number words are sometimes used in the ordinal book names 
+        # These number words are sometimes used in the ordinal book names
         # (1 John, etc.).
         refstr = re.sub(r'(?i)first\s*', '1', refstr)
         refstr = re.sub(r'(?i)second\s*', '2', refstr)
@@ -394,32 +410,31 @@ class RefParser(Dict):
 
         return refstr
 
-
     def clean_up_range(self, rng):
         """fill the range and make sure ch and vs are ints, with any vs sub modifiers in sub"""
         rng = self.fill_range(rng)
-        if rng[0].bk is not None and rng[0].id is None: rng[0].id = self.match_book(rng[0].bk).id
-        rng[0].ch = int(self.clean_intstr(rng[0].ch) or 1)                              # rng[0].ch
-        rng[1].ch = int(self.clean_intstr(rng[1].ch) or self.chapters_in(rng[0].bk))    # rng[1].ch
+        if rng[0].bk is not None and rng[0].id is None:
+            rng[0].id = self.match_book(rng[0].bk).id
+        rng[0].ch = int(self.clean_intstr(rng[0].ch) or 1)  # rng[0].ch
+        rng[1].ch = int(self.clean_intstr(rng[1].ch) or self.chapters_in(rng[0].bk))  # rng[1].ch
         if type(rng[0].vs) == str:
-            sub = re.search("[^0-9\W]+$", rng[0].vs)                                    # rng[0].vs
+            sub = re.search("[^0-9\W]+$", rng[0].vs)  # rng[0].vs
             intstr = self.clean_intstr(rng[0].vs)
-            if sub is not None and type(intstr)==str and intstr in rng[0].vs: 
+            if sub is not None and type(intstr) == str and intstr in rng[0].vs:
                 LOG.debug("rng[0].vsub = %r" % sub.group(0))
                 rng[0].vsub = sub.group(0)
             rng[0].vs = int(self.clean_intstr(rng[0].vs) or 1)
         if type(rng[1].vs) == str:
-            sub = re.search("[^0-9\W]+$", rng[1].vs)                                    # rng[1].vs
+            sub = re.search("[^0-9\W]+$", rng[1].vs)  # rng[1].vs
             intstr = self.clean_intstr(rng[1].vs)
-            if sub is not None and type(intstr)==str and intstr in rng[1].vs: 
+            if sub is not None and type(intstr) == str and intstr in rng[1].vs:
                 LOG.debug("rng[1].vsub = %r" % sub.group(0))
                 rng[1].vsub = sub.group(0)
             rng[1].vs = int(self.clean_intstr(rng[1].vs) or self.verses_in(rng[1].bk, rng[1].ch))
         if rng[0].id is not None and rng[1].id is None:
             rng[1].id = rng[0].id
         return rng
-        
-    
+
     def fill_range(self, rng):
         """fill a range that does not have all the verses defined.
         Spec:
@@ -439,35 +454,44 @@ class RefParser(Dict):
         >>> rp.fill_range(bible_ref.RefRange((bible_ref.Ref(db, bk='Gen', ch=3, vs=15), bible_ref.Ref(db, ch=4, vs=17)))).display()
         (u'Gen 3:15', u'Gen 4:17')
         """
-        LOG.debug("fill range: %r" % [(rng[0].bk, rng[0].ch, rng[0].vs), (rng[1].bk, rng[1].ch, rng[1].vs)])
+        LOG.debug(
+            "fill range: %r"
+            % [(rng[0].bk, rng[0].ch, rng[0].vs), (rng[1].bk, rng[1].ch, rng[1].vs)]
+        )
         status = None
         if rng[0].bk is not None:
             for book in self.canon.books:
                 if book.name == rng[0].bk:
-                    for key in [key for key in book.keys() if key not in ['chapters', 'pattern', 'rexp']]:
+                    for key in [
+                        key for key in book.keys() if key not in ['chapters', 'pattern', 'rexp']
+                    ]:
                         rng[0][key] = book[key]
                     break
             if rng[0].ch is not None:
                 if rng[0].vs is not None:
-                    if rng[1].vs is None: 
+                    if rng[1].vs is None:
                         if rng[1].ch is None:
-                            if rng[1].bk is None:       
+                            if rng[1].bk is None:
                                 # rng[0] is full, rng[1] is empty, so the range is one verse
                                 status = "the range is one verse, make rng[1] = rng[0]"
                                 rng[1].bk = rng[0].bk
                                 for book in self.canon.books:
                                     if book.name == rng[1].bk:
-                                        for key in [key for key in book.keys() if key not in ['chapters', 'pattern', 'rexp']]:
-                                            rng[0][key] = book[key]                                
+                                        for key in [
+                                            key
+                                            for key in book.keys()
+                                            if key not in ['chapters', 'pattern', 'rexp']
+                                        ]:
+                                            rng[0][key] = book[key]
                                         break
                                 rng[1].ch = rng[0].ch
                                 rng[1].vs = rng[0].vs
-                            else: 
+                            else:
                                 # rng[0] is full, rng[1].bk is not None, the range is to the end of the second bk
                                 status = "the range is to the end of the second bk"
                                 rng[1].ch = self.chapters_in(rng[1].bk)
                                 rng[1].vs = self.verses_in(rng[1].bk, rng[1].ch)
-                        else: 
+                        else:
                             # rng[0] is full, rng[1].ch is not None, so the range is in the same book, to the end of the second ch.
                             status = "the range is in the same book, to the end of the second ch."
                             rng[1].bk = rng[0].bk
@@ -476,56 +500,92 @@ class RefParser(Dict):
                     else:
                         # rng[0] is full, rng[1].vs is not None, so the range is verses
                         status = "the range is verses either within or between chs"
-                        if rng[1].ch is None: rng[1].ch = rng[0].ch
-                        if rng[1].bk is None: rng[1].bk = rng[0].bk
+                        if rng[1].ch is None:
+                            rng[1].ch = rng[0].ch
+                        if rng[1].bk is None:
+                            rng[1].bk = rng[0].bk
                 else:
                     # rng[0].vs is None, but rng[0].ch and .bk are defined, so it's either a whole chapter or a range of chapters
                     status = "it's either a whole chapter or a range of chapters"
                     rng[0].wholech = True
                     rng[0].vs = 1
-                    if rng[1].bk is None:   # same book
+                    if rng[1].bk is None:  # same book
                         rng[1].bk = rng[0].bk
-                        if rng[1].ch is None: rng[1].ch = rng[0].ch
+                        if rng[1].ch is None:
+                            rng[1].ch = rng[0].ch
                     else:
                         rng[1].ch = rng[1].ch or self.chapters_in(rng[1].bk)
                         status += ", rng[1].ch=%s" % (str(rng[1].ch))
-                    if rng[1].vs is None: 
+                    if rng[1].vs is None:
                         rng[1].vs = self.verses_in(rng[1].bk, rng[1].ch) or 0
                         status += ", rng[1].vs=%s" % (str(rng[1].vs))
             else:
                 # rng[0].ch is None, but rng[0].bk is defined, so it's either a verse or range in a one ch book, or a range of books
-                if rng[0].vs is not None:   # vs or rng in one-chapter book
+                if rng[0].vs is not None:  # vs or rng in one-chapter book
                     status = "it's a vs or rng in a one-chapter book."
                     rng[0].ch = 1
-                    if rng[1].bk is None: rng[1].bk = rng[0].bk
-                    if rng[1].ch is None: rng[1].ch = rng[0].ch
-                    if rng[1].vs is None: rng[1].vs = rng[0].vs
-                else:                       # whole book or range of books
+                    if rng[1].bk is None:
+                        rng[1].bk = rng[0].bk
+                    if rng[1].ch is None:
+                        rng[1].ch = rng[0].ch
+                    if rng[1].vs is None:
+                        rng[1].vs = rng[0].vs
+                else:  # whole book or range of books
                     status = "it's a whole book or range of books."
                     rng[0].ch = 1
                     rng[0].vs = 1
-                    if rng[1].bk is None: rng[1].bk = rng[0].bk
-                    if rng[1].ch is None: 
+                    if rng[1].bk is None:
+                        rng[1].bk = rng[0].bk
+                    if rng[1].ch is None:
                         rng[1].ch = self.chapters_in(rng[1].bk)
                         status += ", rng[1].ch=%s is last ch in book" % str(rng[1].ch)
-                    if rng[1].vs is None: 
+                    if rng[1].vs is None:
                         rng[1].vs = self.verses_in(rng[1].bk, rng[1].ch)
                         status += ", rng[1].vs=%s is last vs in rng[1].ch" % str(rng[1].vs)
         LOG.debug("=> %s" % status)
-        LOG.debug("filled range: %r" % [(rng[0].bk, rng[0].ch, rng[0].vs), (rng[1].bk, rng[1].ch, rng[1].vs)])
+        LOG.debug(
+            "filled range: %r"
+            % [(rng[0].bk, rng[0].ch, rng[0].vs), (rng[1].bk, rng[1].ch, rng[1].vs)]
+        )
         rng[0].name = rng[0].bk
         rng[1].name = rng[1].bk
         return rng
 
-    
     def item_name(self, inrefs):
-        return self.format(inrefs, cvsep='.', bksep='.', bkarg='romname', 
-            vsrsep='-', chrsep='-', bkrsep='-', comma='.', semicolon='.').replace(';','.').replace(' ','')
+        return (
+            self.format(
+                inrefs,
+                cvsep='.',
+                bksep='.',
+                bkarg='romname',
+                vsrsep='-',
+                chrsep='-',
+                bkrsep='-',
+                comma='.',
+                semicolon='.',
+            )
+            .replace(';', '.')
+            .replace(' ', '')
+        )
 
-    def format(self, inrefs, currbk=0, minimize=False, with_bk=True, 
-                html=False, uri='', qarg='?bref=', 
-                bkarg='name', cvsep=':', bksep=' ', vsrsep='-', 
-                chrsep=u'\u2013', bkrsep=u'\u2014', comma=', ', semicolon='; '):
+    def format(
+        self,
+        inrefs,
+        currbk=0,
+        minimize=False,
+        with_bk=True,
+        html=False,
+        uri='',
+        qarg='?bref=',
+        bkarg='name',
+        cvsep=':',
+        bksep=' ',
+        vsrsep='-',
+        chrsep=u'\u2013',
+        bkrsep=u'\u2014',
+        comma=', ',
+        semicolon='; ',
+    ):
         """Format the output of RefParser.parse(), which is a list of Ref tuples.
         Usage:
         >>> import bibleweb; db=bibleweb.db(); refparser=BibleRefParser(db)
@@ -542,9 +602,9 @@ class RefParser(Dict):
         # ** NOTE REGARDING THE minimize PARAMETER **
         # I would like to include a test for whether the formatted output includes verse numbers when we have the whole chapter,
         # but that requires significant refactoring and retesting of the code.
-        # So for now, unless we can find another way to test for chapter length, we have to be content 
+        # So for now, unless we can find another way to test for chapter length, we have to be content
         # showing the entire reference in detail.
-        
+
         # normalize inrefs
         # if type(inrefs) in [str, int]:
         #     inrefs = self.parse(inrefs)
@@ -552,58 +612,112 @@ class RefParser(Dict):
         #     inrefs = RefList([RefRange((inrefs, Ref()))])
         # elif type(inrefs)==RefRange:
         #     inrefs = RefList([inrefs])
-            
+
         # KLUDGE: fix Psalm vs Psalms
         for ref in inrefs:
-            if ref[0].title=='Psalms' and ref[0].bk == ref[1].bk and ref[0].ch == ref[1].ch:
+            if ref[0].title == 'Psalms' and ref[0].bk == ref[1].bk and ref[0].ch == ref[1].ch:
                 ref[0].title = ref[1].title = 'Psalm'
-            
+
         currch = 0
         currvs = 0
         out = ""
         for startref, endref in inrefs:
-            if startref is None or startref == {}: continue
-            if startref is not None and startref.vsub is not None: startref.vsub = startref.vsub.strip("_") # vsub shd be a letter only.
-            if endref is not None and endref.vsub is not None: endref.vsub = endref.vsub.strip("_")
-            if currbk==startref.bk or with_bk==False:
-                if currch==startref.ch:
+            if startref is None or startref == {}:
+                continue
+            if startref is not None and startref.vsub is not None:
+                startref.vsub = startref.vsub.strip("_")  # vsub shd be a letter only.
+            if endref is not None and endref.vsub is not None:
+                endref.vsub = endref.vsub.strip("_")
+            if currbk == startref.bk or with_bk == False:
+                if currch == startref.ch:
                     startrefstr = "%s%s%s" % (comma, startref.vs, startref.vsub or '')
                 else:
-                    if out != '': out += '; '
-                    startrefstr = "%s%s%s%s" % (startref.ch, cvsep, startref.vs, startref.vsub or '')
+                    if out != '':
+                        out += '; '
+                    startrefstr = "%s%s%s%s" % (
+                        startref.ch,
+                        cvsep,
+                        startref.vs,
+                        startref.vsub or '',
+                    )
             else:
-                if out != '': out += semicolon
-                startrefstr = "%s%s%s%s%s%s" % (startref[bkarg], bksep, startref.ch, cvsep, startref.vs, startref.vsub or '')
+                if out != '':
+                    out += semicolon
+                startrefstr = "%s%s%s%s%s%s" % (
+                    startref[bkarg],
+                    bksep,
+                    startref.ch,
+                    cvsep,
+                    startref.vs,
+                    startref.vsub or '',
+                )
 
             currbk, currch, currvs = startref.bk, startref.ch, startref.vs
 
-            if endref is None or endref=={}:
+            if endref is None or endref == {}:
                 endrefstr = ""
-            elif currbk==endref.bk or with_bk==False:
-                if currch==endref.ch:
+            elif currbk == endref.bk or with_bk == False:
+                if currch == endref.ch:
                     if currvs == endref.vs:
                         endrefstr = ""
-                    else:   # one hyphen to separate a vs
+                    else:  # one hyphen to separate a vs
                         endrefstr = "%s%s%s" % (vsrsep, endref.vs, endref.vsub or '')
-                else:       # default -- to cvsep. ch:vs
-                    endrefstr = "%s%s%s%s%s" % (chrsep, endref.ch, cvsep, endref.vs, endref.vsub or '')
-            else:           # default --- to cvsep. bk ch:vs
-                if bkarg not in endref and bkarg in startref: endref[bkarg] = startref[bkarg]
-                endrefstr = "%s%s%s%s%s%s%s" % (bkrsep, endref[bkarg], bksep, endref.ch, cvsep, endref.vs, endref.vsub or '')
+                else:  # default -- to cvsep. ch:vs
+                    endrefstr = "%s%s%s%s%s" % (
+                        chrsep,
+                        endref.ch,
+                        cvsep,
+                        endref.vs,
+                        endref.vsub or '',
+                    )
+            else:  # default --- to cvsep. bk ch:vs
+                if bkarg not in endref and bkarg in startref:
+                    endref[bkarg] = startref[bkarg]
+                endrefstr = "%s%s%s%s%s%s%s" % (
+                    bkrsep,
+                    endref[bkarg],
+                    bksep,
+                    endref.ch,
+                    cvsep,
+                    endref.vs,
+                    endref.vsub or '',
+                )
 
-            if html==True:                      # format the output to be a list of html links to the given href
-                if uri is None: uri = ""
+            if html == True:  # format the output to be a list of html links to the given href
+                if uri is None:
+                    uri = ""
                 if qarg is None:
                     qarg = ''
                 term = self.clean_refstring(("%(bk)s.%(ch)s.%(vs)s" % startref) + endrefstr)
-                out += "<a href='%s'>%s</a>" % (uri + qarg + term, startrefstr+endrefstr)
+                out += "<a href='%s'>%s</a>" % (uri + qarg + term, startrefstr + endrefstr)
             else:
                 out += startrefstr + endrefstr
 
         return out
 
+    def refstr_from_ids(self, ids):
+        """given a ref id or ids, return a reference string.
+        The ids string is one or more refids, separated by hyphens (ranges) and commas (instances)
+        """
+        range_ids = [id.strip() for id in ids.split(',') if id.strip() != '']
+        range_refstrs = []
+        for range_id in range_ids:
+            range_refstrs.append(
+                '-'.join(
+                    [
+                        self.refstr_from_id(rid.strip())
+                        for rid in range_id.split('-')
+                        if rid.strip() != ''
+                    ]
+                )
+            )
+        refstr = self.refstring(self.parse(';'.join(range_refstrs)))
+        return refstr
+
+
     def refstr_from_id(self, id):
-        """given a ref id in the canon, return a reference string"""
+        """given a ref id in the canon, return a reference string.
+        """
         idstr = re.sub(r'(^[^\d]+|[^\d]+$)', '', id).replace('000000', '')
         idstr = re.sub(r'000$', '', idstr)
         idstr = re.sub(r'000$', '', idstr)
@@ -686,6 +800,8 @@ def test_parse():
     [(u'2Jn 1:1', u'Jude 1:25')]
     """
 
+
 if __name__ == "__main__":
     import doctest
+
     doctest.testmod()
