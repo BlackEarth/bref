@@ -75,8 +75,8 @@ class RefParser(Dict):
         * whole books indicated by book name without chapter or verse numbers
         * following references that lack a bookname take it from the previous reference
         """
-        if re.match(r"^\d+$", refstring):
-            refstring = self.refstr_from_id(refstring)
+        if re.match(r"^[\d\-,]+$", refstring):
+            refstring = self.refstr_from_ids(refstring)
         else:
             refstring = self.clean_refstring(refstring)
         LOG.debug("%s %s" % (refstring, '[' + (bk or '') + ']'))
