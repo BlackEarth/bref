@@ -1,4 +1,3 @@
-
 import re, logging
 
 from bl.dict import Dict
@@ -14,10 +13,10 @@ LOG = logging.getLogger(__name__)
 
 
 class RefParser(Dict):
-    """Tool to 
-        * tell if a string is a Ref, 
-        * parse strings into Refs, and 
-        * format RefLists and RefRanges.
+    """Tool to
+    * tell if a string is a Ref,
+    * parse strings into Refs, and
+    * format RefLists and RefRanges.
     """
 
     def __repr__(self):
@@ -88,11 +87,15 @@ class RefParser(Dict):
             if re.match("^[0-9]+f$", tokens[i], re.I):
                 tokens[i] = re.sub('f', '', tokens[i], re.I)
                 tokens.insert(i + 1, '-')
-                tokens.insert(i + 2, 'F')  # special token: get the next ch or vs number.
+                tokens.insert(
+                    i + 2, 'F'
+                )  # special token: get the next ch or vs number.
             elif re.match("^[0-9]+ff$", tokens[i], re.I):
                 tokens[i] = re.sub('f', '', tokens[i], re.I)
                 tokens.insert(i + 1, '-')
-                tokens.insert(i + 2, 'FF')  # special token: get the last ch or vs number.
+                tokens.insert(
+                    i + 2, 'FF'
+                )  # special token: get the last ch or vs number.
 
         # either bk is a parameter or the first token, or this is not a reference
         if self.match_book(tokens[0]) is None:
@@ -134,7 +137,10 @@ class RefParser(Dict):
                 "^(?:ch|chap|chapter)?s?$", token, re.I
             ):  # the word "chapter" or some form thereof
                 expect = 'CH'
-            elif token in [';', ',']:  # ; or , -- slightly different, but some overlap as well
+            elif token in [
+                ';',
+                ',',
+            ]:  # ; or , -- slightly different, but some overlap as well
                 # add crng to reflist and initialize new range
                 self.append_range(crng, reflist)
 
@@ -300,7 +306,9 @@ class RefParser(Dict):
 
     def get_vs(self, crng, token):
         if token == 'F':
-            r = self.parse("%s %s:%s" % (crng[0].bk, crng[0].ch, str(int(crng[0].vs) + 1)))
+            r = self.parse(
+                "%s %s:%s" % (crng[0].bk, crng[0].ch, str(int(crng[0].vs) + 1))
+            )
             LOG.debug("get_vs, F: r = %r" % r)
             return r[0][0].vs
         elif token == 'FF':
@@ -323,7 +331,7 @@ class RefParser(Dict):
         return self.clean_refstring(self.format(ref))
 
     def clean_refstring(self, refstr=u''):
-        """ cleanup refstr:
+        """cleanup refstr:
             ',' = ref separator, hint to verse
             ';' = ref separator, hint to chapter
             '.' = bk/ch/vs separator
@@ -420,7 +428,9 @@ class RefParser(Dict):
         if rng[0].bk is not None and rng[0].id is None:
             rng[0].id = self.match_book(rng[0].bk).id
         rng[0].ch = int(self.clean_intstr(rng[0].ch) or 1)  # rng[0].ch
-        rng[1].ch = int(self.clean_intstr(rng[1].ch) or self.chapters_in(rng[0].bk))  # rng[1].ch
+        rng[1].ch = int(
+            self.clean_intstr(rng[1].ch) or self.chapters_in(rng[0].bk)
+        )  # rng[1].ch
         if type(rng[0].vs) == str:
             sub = re.search("[^0-9\W]+$", rng[0].vs)  # rng[0].vs
             intstr = self.clean_intstr(rng[0].vs)
@@ -434,7 +444,9 @@ class RefParser(Dict):
             if sub is not None and type(intstr) == str and intstr in rng[1].vs:
                 LOG.debug("rng[1].vsub = %r" % sub.group(0))
                 rng[1].vsub = sub.group(0)
-            rng[1].vs = int(self.clean_intstr(rng[1].vs) or self.verses_in(rng[1].bk, rng[1].ch))
+            rng[1].vs = int(
+                self.clean_intstr(rng[1].vs) or self.verses_in(rng[1].bk, rng[1].ch)
+            )
         if rng[0].id is not None and rng[1].id is None:
             rng[1].id = rng[0].id
         return rng
@@ -467,7 +479,9 @@ class RefParser(Dict):
             for book in self.canon.books:
                 if book.name == rng[0].bk:
                     for key in [
-                        key for key in book.keys() if key not in ['chapters', 'pattern', 'rexp']
+                        key
+                        for key in book.keys()
+                        if key not in ['chapters', 'pattern', 'rexp']
                     ]:
                         rng[0][key] = book[key]
                     break
@@ -484,7 +498,8 @@ class RefParser(Dict):
                                         for key in [
                                             key
                                             for key in book.keys()
-                                            if key not in ['chapters', 'pattern', 'rexp']
+                                            if key
+                                            not in ['chapters', 'pattern', 'rexp']
                                         ]:
                                             rng[0][key] = book[key]
                                         break
@@ -545,7 +560,9 @@ class RefParser(Dict):
                         status += ", rng[1].ch=%s is last ch in book" % str(rng[1].ch)
                     if rng[1].vs is None:
                         rng[1].vs = self.verses_in(rng[1].bk, rng[1].ch)
-                        status += ", rng[1].vs=%s is last vs in rng[1].ch" % str(rng[1].vs)
+                        status += ", rng[1].vs=%s is last vs in rng[1].ch" % str(
+                            rng[1].vs
+                        )
         LOG.debug("=> %s" % status)
         LOG.debug(
             "filled range: %r"
@@ -603,11 +620,12 @@ class RefParser(Dict):
         >>> p.format(html=True, bkarg='title_es')
         u"<a href='?bref=Exod.3.2---Lev.4.5'>\\xc9xodo 3:2---L\\xe9vitico 4:5</a>"
         """
-        # ** NOTE REGARDING THE minimize PARAMETER **
-        # I would like to include a test for whether the formatted output includes verse numbers when we have the whole chapter,
-        # but that requires significant refactoring and retesting of the code.
-        # So for now, unless we can find another way to test for chapter length, we have to be content
-        # showing the entire reference in detail.
+        # ## ** NOTE REGARDING THE minimize PARAMETER ** 
+        # I would like to include a test for whether the formatted output includes verse
+        # numbers when we have the whole chapter, but that requires significant
+        # refactoring and retesting of the code. So for now, unless we can find another
+        # way to test for chapter length, we have to be content showing the entire
+        # reference in detail.
 
         # normalize inrefs
         # if type(inrefs) in [str, int]:
@@ -619,7 +637,11 @@ class RefParser(Dict):
 
         # KLUDGE: fix Psalm vs Psalms
         for ref in inrefs:
-            if ref[0].title == 'Psalms' and ref[0].bk == ref[1].bk and ref[0].ch == ref[1].ch:
+            if (
+                ref[0].title == 'Psalms'
+                and ref[0].bk == ref[1].bk
+                and ref[0].ch == ref[1].ch
+            ):
                 ref[0].title = ref[1].title = 'Psalm'
 
         currch = 0
@@ -687,13 +709,20 @@ class RefParser(Dict):
                     endref.vsub or '',
                 )
 
-            if html == True:  # format the output to be a list of html links to the given href
+            if (
+                html == True
+            ):  # format the output to be a list of html links to the given href
                 if uri is None:
                     uri = ""
                 if qarg is None:
                     qarg = ''
-                term = self.clean_refstring(("%(bk)s.%(ch)s.%(vs)s" % startref) + endrefstr)
-                out += "<a href='%s'>%s</a>" % (uri + qarg + term, startrefstr + endrefstr)
+                term = self.clean_refstring(
+                    ("%(bk)s.%(ch)s.%(vs)s" % startref) + endrefstr
+                )
+                out += "<a href='%s'>%s</a>" % (
+                    uri + qarg + term,
+                    startrefstr + endrefstr,
+                )
             else:
                 out += startrefstr + endrefstr
 
@@ -718,10 +747,8 @@ class RefParser(Dict):
         refstr = self.refstring(self.parse(';'.join(range_refstrs)))
         return refstr
 
-
     def refstr_from_id(self, id):
-        """given a ref id in the canon, return a reference string.
-        """
+        """given a ref id in the canon, return a reference string."""
         idstr = re.sub(r'(^[^\d]+|[^\d]+$)', '', id).replace('000000', '')
         idstr = re.sub(r'000$', '', idstr)
         idstr = re.sub(r'000$', '', idstr)

@@ -5,8 +5,7 @@ from bl.dict import Dict
 
 @functools.total_ordering
 class Ref(Dict):
-    """Holds a single reference, with keys 'id' (int), 'name' (str), 'ch' (int), 'vs' (int).
-    """
+    """Holds a single reference, with keys 'id' (int), 'name' (str), 'ch' (int), 'vs' (int)."""
 
     def __init__(self, **args):
         Dict.__init__(self, **args)
@@ -34,8 +33,7 @@ class Ref(Dict):
         return r
 
     def key(self):
-        """returns a sortkey for this Ref
-        """
+        """returns a sortkey for this Ref"""
         k = ""
         if self.id is not None:
             k += "%03d" % int(self.id)

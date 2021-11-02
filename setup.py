@@ -1,4 +1,3 @@
-
 import os, json
 from setuptools import setup, find_packages
 from codecs import open
