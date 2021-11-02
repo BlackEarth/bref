@@ -4,7 +4,7 @@ import re, os, sys
 
 
 def book_pattern(canon):
-    return "(?:(?:" + "|".join([bk.pattern_strict for bk in canon.books]) + ")\\.?)"
+    return "(?:(?:" + "|".join([bk.pattern for bk in canon.books]) + ")\\.?)"
 
 
 def book_replacer(canon, attr, flags=re.I):
@@ -19,6 +19,10 @@ def book_replacer(canon, attr, flags=re.I):
     return br
 
 
+def full_books_pattern(canon):
+    return "\\b(?:" + "|".join([bk.title % bk for bk in canon.books]) + ")\\b"
+
+
 def make_patterns(canon):
     # == Build the regexps for finding references in text ==
     patterns = []
@@ -28,7 +32,7 @@ def make_patterns(canon):
 
     # building blocks
     bkpat = book_pattern(canon)
-    fullbkpat = "\\b(?:" + "|".join([bk.title % bk for bk in canon.books]) + ")\\b"
+    fullbkpat = full_books_pattern(canon)
     chpat = "(?:[1-9][0-9]*[a-f]{0,2}\\b)"
     vspat = "(?:[\\.:]?[1-9][0-9]*[a-f]{0,2}\\b)"
     sepat = "\\s*(?:[,\\-\u2013\u2014]?)+\\s*"
@@ -64,6 +68,7 @@ def make_patterns(canon):
     patterns += ["\\b([Cc]hapters?\\s*" + chpat + "(?:" + sepat + chpat + ")*)"]
     patterns += ["\\b([Cc]haps?\\.?\\s*" + chpat + "(?:" + sepat + chpat + ")*)"]
     patterns += ["\\b([Cc]hs?\\.?\\s*" + chpat + "(?:" + sepat + chpat + ")*)"]
+    # patterns += ["\\b([Cc]apítulos?\\s*" + chpat + "(?:" + sepat + chpat + ")*)"]
 
     # * chapters without book names, after link and semi-colon
     patterns += ["(?<=</ref>; )(" + chpat + "(?:" + sepat + chpat + ")?)"]
@@ -79,14 +84,14 @@ def make_patterns(canon):
     return {'patterns': patterns, 'repeating': repeating, 'regexs': regexs}
 
 
-def tag_refs_in_text(text, patterns, refparser=None):
+def tag_refs_in_text(text, patterns, refparser=None, bk=None):
     def repl_bref(md):
         txt = md.group(1)
         if refparser is not None:
             try:
-                refstr = refparser.refstring(refparser.parse(txt))
-            except:
-                print("ERR:", txt)
+                refstr = refparser.refstring(refparser.parse(txt, bk=bk))
+            except Exception as exc:
+                print("RefParser.parse ERROR:", txt, " -- ", str(exc))
                 return txt
             tagged = """<ref name="%s">%s</ref>""" % (refstr, txt)
         else:
@@ -106,16 +111,16 @@ def tag_refs_in_text(text, patterns, refparser=None):
     return text
 
 
-def tag_refs_in_xml(x, patterns, xpath=None, namespaces=None, refparser=None):
+def tag_refs_in_xml(x, patterns, xpath=None, namespaces=None, refparser=None, bk=None):
     if xpath is None:
         elements = x.xpath(x.root, "//*")
     else:
         elements = x.xpath(x.root, xpath, namespaces=namespaces)
     for element in elements:
         if element.text is not None and element.get('href') is None:
-            element.text = tag_refs_in_text(element.text, patterns, refparser=refparser)
+            element.text = tag_refs_in_text(element.text, patterns, refparser=refparser, bk=bk)
         if element.tail is not None:
-            element.tail = tag_refs_in_text(element.tail, patterns, refparser=refparser)
+            element.tail = tag_refs_in_text(element.tail, patterns, refparser=refparser, bk=bk)
     t = re.sub("&lt;(ref[^&>]+)&gt;", r"<\1>", x.tostring()).replace(
         "&lt;/ref&gt;", "</ref>"
     )
@@ -124,4 +129,5 @@ def tag_refs_in_xml(x, patterns, xpath=None, namespaces=None, refparser=None):
     except:
         print(t)
         raise
+
     return x
