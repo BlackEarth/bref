@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 
-<canon xmlns="http://blackearth.us/xml" name="NLT" lang="en">
+<canon xmlns="http://blackearth.us/xml" name="NTV" lang="en">
 
 	<book name="-" id="0">
 		<title>-</title>
@@ -12,7 +12,7 @@
 
 	<book name="Gen" id="1">
 		<title>Génesis</title>
-		<pattern>\b(?:Gn|Ge|Gé\w*?)\b</pattern>
+		<pattern>\b(?:G[eé]nesis|Gn|G[eé]\w*?)\b</pattern>
 		<abbr>Gen.</abbr>
 		<chapters>
 		  <chapter vss="31" n="1"/>
@@ -71,7 +71,7 @@
 	
 	<book name="Exod" id="2">
 		<title>Éxodo</title>
-		<pattern>\b(?:Ex|Éx\w*?)\b</pattern>
+		<pattern>\b(?:Exo?|Éx\w*?)\b</pattern>
 		<abbr>Exod.</abbr>
 		<chapters>
 		  <chapter vss="22" n="1"/>
@@ -652,7 +652,7 @@
 	
 	<book name="Psa" id="19">
 		<title>Salmo</title>
-		<pattern>\b(?:Ps\w*?)\b</pattern>
+		<pattern>\b(?:Sal\w*?|Ps\w*?)\b</pattern>
 		<pattern_strict>\b(?:Sal|Ps|Pss?|Psalms?|PSAL)\b</pattern_strict>
 		<abbr>Ps.</abbr>
 		<chapters>
@@ -872,7 +872,7 @@
 	
 	<book name="Song" id="22">
 		<title>Cantar de los Cantares</title>
-		<pattern>\b(?:Sg|So|SS|Song|Song of S|Ct|Ca)\w*?\b</pattern>
+		<pattern>\b(?:Sg|So|SS|Song|Song of S|Ct|Cantar\w*?)\b</pattern>
 		<abbr>Song</abbr>
 		<chapters>
 		  <chapter vss="17" n="1"/>
@@ -964,7 +964,7 @@
 	
 	<book name="Jer" id="24">
 		<title>Jeremías</title>
-		<pattern>\b(?:Jr|Je|Jer\w*?)\b</pattern>
+		<pattern>\b(?:Jr|Je|Jer|Jere\w*?)\b</pattern>
 		<abbr>Jer.</abbr>
 		<chapters>
 		  <chapter vss="19" n="1"/>
@@ -1417,7 +1417,7 @@
 	
 	<book name="Acts" id="44">
 		<title>Hechos</title>
-		<pattern>\b(?:Ac|Acts|Hech?)\b</pattern>
+		<pattern>\b(?:Ac|Acts|Hech?|Hechos)\b</pattern>
 		<abbr>Acts</abbr>
 		<chapters>
 		  <chapter vss="26" n="1"/>
@@ -1556,7 +1556,7 @@
 	
 	<book name="Phil" id="50">
 		<title>Filipenses</title>
-		<pattern>\b(?:Fil|Phl?p|Phil|Phil[li]\w*?)\b</pattern>
+		<pattern>\b(?:Filipenses|Fil|Phl?p|Phil|Phil[li]\w*?)\b</pattern>
 		<abbr>Phil.</abbr>
 		<chapters>
 		  <chapter vss="30" n="1"/>
@@ -1648,7 +1648,7 @@
 	
 	<book name="Phlm" id="57">
 		<title>Filemón</title>
-		<pattern>\b(?:Flm|Phl?m|(?:Ph|F)ile\w*?)\b</pattern>
+		<pattern>\b(?:Flm|Plm|Phl?m|(?:Ph|F)ile\w*?)\b</pattern>
 		<abbr>Phlm.</abbr>
 		<chapters>
 		  <chapter vss="25" n="1"/>
