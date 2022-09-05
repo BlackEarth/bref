@@ -1,5 +1,5 @@
 from bl.dict import Dict
-from bxml import NS
+from .ns import NS
 from bxml import XML
 from bxml.builder import Builder
 
@@ -25,7 +25,7 @@ class Canon(Dict):
         return canon
 
     def to_xml(self, fn=None, config=None):
-        E = Builder(default=NS.bl, **NS)._
+        E = Builder.single(NS)
         x = XML(
             fn=fn, config=config, root=E.canon({'name': self.name, 'lang': self.lang})
         )

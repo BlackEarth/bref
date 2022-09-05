@@ -1,5 +1,5 @@
 from bl.dict import Dict
-from bxml import NS
+from .ns import NS
 from bxml import XML
 from bxml.builder import Builder
 
