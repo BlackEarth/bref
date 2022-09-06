@@ -1,13 +1,14 @@
-import re, logging
+import logging
+import re
 
 from bl.dict import Dict
 from bxml.xml import XML
 
-from .ref import Ref
-from .refrange import RefRange
-from .reflist import RefList
 from .book import Book
 from .canon import Canon
+from .ref import Ref
+from .reflist import RefList
+from .refrange import RefRange
 
 LOG = logging.getLogger(__name__)
 
@@ -78,23 +79,23 @@ class RefParser(Dict):
             refstring = self.refstr_from_ids(refstring)
         else:
             refstring = self.clean_refstring(refstring)
-        LOG.debug("%s %s" % (refstring, '[' + (bk or '') + ']'))
+        LOG.debug("%s %s" % (refstring, "[" + (bk or "") + "]"))
 
         tokens = re.split("([.,;\-] ?)", refstring)  # sequence of tokens
 
         # look for 'f' or 'ff' at the end of numeric tokens
         for i in range(len(tokens) - 1, 0, -1):  # count backwards to avoid conflict
             if re.match("^[0-9]+f$", tokens[i], re.I):
-                tokens[i] = re.sub('f', '', tokens[i], re.I)
-                tokens.insert(i + 1, '-')
+                tokens[i] = re.sub("f", "", tokens[i], re.I)
+                tokens.insert(i + 1, "-")
                 tokens.insert(
-                    i + 2, 'F'
+                    i + 2, "F"
                 )  # special token: get the next ch or vs number.
             elif re.match("^[0-9]+ff$", tokens[i], re.I):
-                tokens[i] = re.sub('f', '', tokens[i], re.I)
-                tokens.insert(i + 1, '-')
+                tokens[i] = re.sub("f", "", tokens[i], re.I)
+                tokens.insert(i + 1, "-")
                 tokens.insert(
-                    i + 2, 'FF'
+                    i + 2, "FF"
                 )  # special token: get the last ch or vs number.
 
         # either bk is a parameter or the first token, or this is not a reference
@@ -105,7 +106,7 @@ class RefParser(Dict):
                 trybook = self.match_book(bk)
                 if trybook is not None:
                     # insert the book and sep at beginning of token list
-                    tokens.insert(0, '.')
+                    tokens.insert(0, ".")
                     tokens.insert(0, trybook.name)
 
         # initialize data
@@ -116,30 +117,30 @@ class RefParser(Dict):
         # initial conditions
         prev = None  # the type of the previous token
         book = Book()
-        expect = 'BOOK'  # start by looking for a book token
+        expect = "BOOK"  # start by looking for a book token
 
         # state machine operates on each token and can access prev and next tokens
         for i in range(len(tokens)):
             token = tokens[i]
             LOG.debug("token = %r\texpect = %r\tprev = %r" % (token, expect, prev))
 
-            if token == '.':  # .
-                if prev == 'BOOK':
+            if token == ".":  # .
+                if prev == "BOOK":
                     # if one chapter book, expect ch or vs
                     if self.chapters_in(book.name) == 1:
-                        expect = 'CHORVS'
+                        expect = "CHORVS"
                     # otherwise, expect ch
                     else:
-                        expect = 'CH'
-                elif prev == 'CH':
-                    expect = 'VS'
+                        expect = "CH"
+                elif prev == "CH":
+                    expect = "VS"
             elif re.match(
                 "^(?:ch|chap|chapter)?s?$", token, re.I
             ):  # the word "chapter" or some form thereof
-                expect = 'CH'
+                expect = "CH"
             elif token in [
-                ';',
-                ',',
+                ";",
+                ",",
             ]:  # ; or , -- slightly different, but some overlap as well
                 # add crng to reflist and initialize new range
                 self.append_range(crng, reflist)
@@ -150,33 +151,33 @@ class RefParser(Dict):
                 cref.bk = prevref.bk
                 LOG.debug("--> new crng = %r" % crng)
                 # if no previous token or previous token was a book, expect a book
-                if prev in [None, 'BOOK']:
-                    expect = 'BOOK'
+                if prev in [None, "BOOK"]:
+                    expect = "BOOK"
                 # if the previous token was a ch, expect a book or a ch
-                elif prev == 'CH':
-                    expect = 'BOOKORCH'
+                elif prev == "CH":
+                    expect = "BOOKORCH"
                 # if prev was a vs, depends on whether it's ; or ,
                 else:
-                    if token == ',':
-                        expect = 'VS'
+                    if token == ",":
+                        expect = "VS"
                         cref.ch = prevref.ch
-                    if token == ';':
-                        expect = 'BOOKORCH'
-            elif token == '-':  # -
+                    if token == ";":
+                        expect = "BOOKORCH"
+            elif token == "-":  # -
                 # switch cref to crng[1]
                 cref = crng[1]
                 LOG.debug("--> switch to crng[1] = %r" % crng[1])
                 # if the previous token was a book, expect a book
-                if prev == 'BOOK':
-                    expect = 'BOOK'
+                if prev == "BOOK":
+                    expect = "BOOK"
                 # if the previous token was a ch, expect a book or a ch
-                elif prev == 'CH':
-                    expect = 'BOOKORCH'
+                elif prev == "CH":
+                    expect = "BOOKORCH"
                 # if the previous token was a vs, expect a ch or a vs (depends on following token)
-                elif prev == 'VS':
-                    expect = 'CHORVS'
+                elif prev == "VS":
+                    expect = "CHORVS"
             else:  # content token
-                if expect == 'BOOK':
+                if expect == "BOOK":
                     # if the token matches a book, then assign it as the book for cref
                     trybook = self.match_book(token)
                     if trybook is not None:
@@ -186,8 +187,8 @@ class RefParser(Dict):
                         cref.id = book.id
                         LOG.debug("--> book = %r" % book.name)
                     # otherwise, the book is null
-                    prev = 'BOOK'
-                elif expect == 'BOOKORCH':
+                    prev = "BOOK"
+                elif expect == "BOOKORCH":
                     # if the token matches a book, then assign it as the book for cref
                     trybook = self.match_book(token)
                     if trybook is not None:
@@ -195,20 +196,20 @@ class RefParser(Dict):
                         for k in book.keys():
                             cref[k] = book[k]
                         cref.bk = book.name
-                        prev = 'BOOK'
+                        prev = "BOOK"
                         LOG.debug("--> book = %r" % book.name)
                     # otherwise, assign it as the chapter for the cref
                     else:
-                        if self.chapters_in(crng[0].bk) == 1 and token != '1':
-                            cref.ch = '1'
+                        if self.chapters_in(crng[0].bk) == 1 and token != "1":
+                            cref.ch = "1"
                             cref.vs = self.get_vs(crng, token)
                             LOG.debug("--> vs = %r" % token)
-                            prev = 'VS'
+                            prev = "VS"
                         else:
                             cref.ch = self.get_ch(crng, token)
                             LOG.debug("--> ch = %r" % token)
-                            prev = 'CH'
-                elif expect == 'CHORVS':
+                            prev = "CH"
+                elif expect == "CHORVS":
                     # either prev=='VS' followed by '-',
                     # or prev=='BOOK'
                     # set up following token
@@ -217,7 +218,7 @@ class RefParser(Dict):
                     else:
                         following = None
                     # prev vs
-                    if prev == 'VS' and tokens[i - 1] == '-':
+                    if prev == "VS" and tokens[i - 1] == "-":
                         trybook = self.match_book(token)
                         if trybook is not None:
                             book = trybook
@@ -225,49 +226,49 @@ class RefParser(Dict):
                                 cref[k] = book[k]
                             cref.bk = book.name
                             LOG.debug("--> book = %r" % book.name)
-                            prev = 'BOOK'
-                        elif following == '.':
+                            prev = "BOOK"
+                        elif following == ".":
                             # the token is a ch
                             cref.ch = self.get_ch(crng, token)
                             LOG.debug("--> ch = %r" % cref.ch)
-                            prev = 'CH'
+                            prev = "CH"
                         else:
                             # the token is a vs
                             cref.vs = self.get_vs(crng, token)
                             LOG.debug("--> vs = %r" % cref.vs)
-                            prev = 'VS'
+                            prev = "VS"
                     # prev one ch book
-                    elif prev == 'BOOK':
+                    elif prev == "BOOK":
                         if self.chapters_in(cref.bk) == 1:
                             LOG.debug("one-chapter book= %r" % cref.bk)
                             # it's a one-chapter book
-                            if token != '1':
+                            if token != "1":
                                 cref.vs = self.get_vs(crng, token)
                                 LOG.debug("--> vs = %r" % token)
-                                prev = 'VS'
-                            elif following == '.':
+                                prev = "VS"
+                            elif following == ".":
                                 cref.ch = self.get_ch(crng, token)
                                 LOG.debug("--> ch = %r" % token)
-                                prev = 'CH'
-                            elif following in ['-', ',']:
+                                prev = "CH"
+                            elif following in ["-", ","]:
                                 cref.vs = self.get_vs(crng, token)
                                 LOG.debug("--> vs = %r" % token)
-                                prev = 'VS'
+                                prev = "VS"
                             else:
                                 cref.ch = self.get_ch(crng, token)
                                 LOG.debug("--> ch = %r" % token)
-                                prev = 'CH'
+                                prev = "CH"
                         else:
                             # multi-chapter book, so this is a ch
                             cref.ch = self.get_ch(crng, token)
                             LOG.debug("--> ch = %r" % token)
-                            prev = 'CH'
-                elif expect == 'CH':
+                            prev = "CH"
+                elif expect == "CH":
                     # the token is a ch
                     cref.ch = self.get_ch(crng, token)
                     LOG.debug("--> ch = %r" % token)
-                    prev = 'CH'
-                elif expect == 'VS':
+                    prev = "CH"
+                elif expect == "VS":
                     trybook = self.match_book(token)
                     if trybook is not None:
                         # the token is a book! yes, it can happen
@@ -279,13 +280,13 @@ class RefParser(Dict):
                             cref.bk = book.name
                         cref.vs = cref.ch = None  # no ch assignment yet
                         LOG.debug("--> bk = %r" % token)
-                        prev = 'BOOK'
+                        prev = "BOOK"
                     else:
                         cref.vs = self.get_vs(crng, token)
                         LOG.debug("--> vs = %r" % token)
-                        prev = 'VS'
+                        prev = "VS"
                 # expect 'SEP' after a content token
-                expect = 'SEP'
+                expect = "SEP"
 
         # close out last range
         self.append_range(crng, reflist)
@@ -293,11 +294,11 @@ class RefParser(Dict):
         return reflist
 
     def get_ch(self, crng, token):
-        if token == 'F':
+        if token == "F":
             r = self.parse("%s %s" % (crng[0].bk, str(int(crng[0].ch) + 1)))
             LOG.debug("get_ch, F: r = %r" % r)
             return r[0][0].ch
-        elif token == 'FF':
+        elif token == "FF":
             r = self.parse("%(bk)s" % crng[0])
             LOG.debug("get_ch, FF: r = %r" % r)
             return r[0][1].ch
@@ -305,13 +306,13 @@ class RefParser(Dict):
             return token
 
     def get_vs(self, crng, token):
-        if token == 'F':
+        if token == "F":
             r = self.parse(
                 "%s %s:%s" % (crng[0].bk, crng[0].ch, str(int(crng[0].vs) + 1))
             )
             LOG.debug("get_vs, F: r = %r" % r)
             return r[0][0].vs
-        elif token == 'FF':
+        elif token == "FF":
             r = self.parse("%(bk)s %(ch)s" % crng[0])
             LOG.debug("get_vs, FF: r = %r" % r)
             return r[0][1].vs
@@ -330,7 +331,7 @@ class RefParser(Dict):
     def refstring(self, ref):
         return self.clean_refstring(self.format(ref))
 
-    def clean_refstring(self, refstr=u''):
+    def clean_refstring(self, refstr=""):
         """cleanup refstr:
             ',' = ref separator, hint to verse
             ';' = ref separator, hint to chapter
@@ -348,50 +349,50 @@ class RefParser(Dict):
         refstr = re.sub(r"(^\W+|\W+$)", "", refstr)
         refstr = re.sub(r"[\(\)\[\]\{\}\<\>]", "", refstr)  # remove brackets and parens
         refstr = refstr.strip()  # Remove leading and trailing whitespace
-        refstr = refstr.strip('-,;.')  # leading and trailing separators
-        refstr = refstr.replace(u'and', ',')
-        refstr = refstr.replace('; ', ';')
-        refstr = refstr.replace(':', '.')
-        refstr = refstr.replace('_', ' ')
-        refstr = refstr.replace('\\', '')
-        refstr = refstr.replace(u'&#160;', ' ')
-        refstr = refstr.replace(u'\u00a0', ' ')
-        refstr = refstr.replace(u'\t', ' ')
-        refstr = refstr.replace(u'&#150;', '-')
-        refstr = refstr.replace(u'&#151;', '-')
-        refstr = refstr.replace(u'&#8211;', '-')
-        refstr = refstr.replace(u'&#8212;', '-')
-        refstr = refstr.replace(u'&#x2010;', '-')
-        refstr = refstr.replace(u'&#x2011;', '-')
-        refstr = refstr.replace(u'&#x2012;', '-')
-        refstr = refstr.replace(u'&#x2013;', '-')
-        refstr = refstr.replace(u'&#x2014;', '-')
-        refstr = refstr.replace(u'\u2010', '-')
-        refstr = refstr.replace(u'\u2011', '-')
-        refstr = refstr.replace(u'\u2011', '-')
-        refstr = refstr.replace(u'\u2013', '-')
-        refstr = refstr.replace(u'\u2014', '-')
-        refstr = refstr.replace(u'\x96', '-')
-        refstr = refstr.replace(u'\x97', '-')
-        refstr = refstr.replace(u'\r', ';')
-        refstr = refstr.replace(u'\n', ';')
-        refstr = refstr.replace(' -', '-')
-        refstr = refstr.replace('- ', '-')
-        while ';;' in refstr:
-            refstr = refstr.replace(';;', ';')
-        while '--' in refstr:
-            refstr = refstr.replace('--', '-')
-        while '  ' in refstr:
-            refstr = refstr.replace('  ', ' ')
-        while '..' in refstr:
-            refstr = refstr.replace('..', '.')
-        while ',,' in refstr:
-            refstr = refstr.replace(',,', ',')
-        refstr = refstr.replace(u' ,', ',')
-        refstr = refstr.replace(u', ', ',')
-        refstr = refstr.replace(u' ;', ';')
-        refstr = refstr.replace(u'; ', ';')
-        refstr = re.sub("([123])\s+([A-Za-z])", r'\1\2', refstr)
+        refstr = refstr.strip("-,;.")  # leading and trailing separators
+        refstr = refstr.replace("and", ",")
+        refstr = refstr.replace("; ", ";")
+        refstr = refstr.replace(":", ".")
+        refstr = refstr.replace("_", " ")
+        refstr = refstr.replace("\\", "")
+        refstr = refstr.replace("&#160;", " ")
+        refstr = refstr.replace("\u00a0", " ")
+        refstr = refstr.replace("\t", " ")
+        refstr = refstr.replace("&#150;", "-")
+        refstr = refstr.replace("&#151;", "-")
+        refstr = refstr.replace("&#8211;", "-")
+        refstr = refstr.replace("&#8212;", "-")
+        refstr = refstr.replace("&#x2010;", "-")
+        refstr = refstr.replace("&#x2011;", "-")
+        refstr = refstr.replace("&#x2012;", "-")
+        refstr = refstr.replace("&#x2013;", "-")
+        refstr = refstr.replace("&#x2014;", "-")
+        refstr = refstr.replace("\u2010", "-")
+        refstr = refstr.replace("\u2011", "-")
+        refstr = refstr.replace("\u2011", "-")
+        refstr = refstr.replace("\u2013", "-")
+        refstr = refstr.replace("\u2014", "-")
+        refstr = refstr.replace("\x96", "-")
+        refstr = refstr.replace("\x97", "-")
+        refstr = refstr.replace("\r", ";")
+        refstr = refstr.replace("\n", ";")
+        refstr = refstr.replace(" -", "-")
+        refstr = refstr.replace("- ", "-")
+        while ";;" in refstr:
+            refstr = refstr.replace(";;", ";")
+        while "--" in refstr:
+            refstr = refstr.replace("--", "-")
+        while "  " in refstr:
+            refstr = refstr.replace("  ", " ")
+        while ".." in refstr:
+            refstr = refstr.replace("..", ".")
+        while ",," in refstr:
+            refstr = refstr.replace(",,", ",")
+        refstr = refstr.replace(" ,", ",")
+        refstr = refstr.replace(", ", ",")
+        refstr = refstr.replace(" ;", ";")
+        refstr = refstr.replace("; ", ";")
+        refstr = re.sub("([123])\s+([A-Za-z])", r"\1\2", refstr)
         # refstr = refstr.replace('1 ', '1')
         # refstr = refstr.replace('2 ', '2')
         # refstr = refstr.replace('3 ', '3')
@@ -404,10 +405,10 @@ class RefParser(Dict):
         # refstr = refstr.replace('0 ', '0')
         # These number words are sometimes used in the ordinal book names
         # (1 John, etc.).
-        refstr = re.sub(r'(?i)first\s*', '1', refstr)
-        refstr = re.sub(r'(?i)second\s*', '2', refstr)
-        refstr = re.sub(r'(?i)third\s*', '3', refstr)
-        refstr = refstr.replace(' ', '.')
+        refstr = re.sub(r"(?i)first\s*", "1", refstr)
+        refstr = re.sub(r"(?i)second\s*", "2", refstr)
+        refstr = re.sub(r"(?i)third\s*", "3", refstr)
+        refstr = refstr.replace(" ", ".")
         refstr = re.sub(r"Song\.[^0-9]*", "Song.", refstr)
         refstr = re.sub(r"\.title", ".0", refstr, flags=re.I)
         refstr = re.sub(r",\s*(heading|title)", "", refstr, flags=re.I)
@@ -481,7 +482,7 @@ class RefParser(Dict):
                     for key in [
                         key
                         for key in book.keys()
-                        if key not in ['chapters', 'pattern', 'rexp']
+                        if key not in ["chapters", "pattern", "rexp"]
                     ]:
                         rng[0][key] = book[key]
                     break
@@ -499,7 +500,7 @@ class RefParser(Dict):
                                             key
                                             for key in book.keys()
                                             if key
-                                            not in ['chapters', 'pattern', 'rexp']
+                                            not in ["chapters", "pattern", "rexp"]
                                         ]:
                                             rng[0][key] = book[key]
                                         break
@@ -576,17 +577,17 @@ class RefParser(Dict):
         return (
             self.format(
                 inrefs,
-                cvsep='.',
-                bksep='.',
-                bkarg='romname',
-                vsrsep='-',
-                chrsep='-',
-                bkrsep='-',
-                comma='.',
-                semicolon='.',
+                cvsep=".",
+                bksep=".",
+                bkarg="romname",
+                vsrsep="-",
+                chrsep="-",
+                bkrsep="-",
+                comma=".",
+                semicolon=".",
             )
-            .replace(';', '.')
-            .replace(' ', '')
+            .replace(";", ".")
+            .replace(" ", "")
         )
 
     def format(
@@ -596,16 +597,16 @@ class RefParser(Dict):
         minimize=False,
         with_bk=True,
         html=False,
-        uri='',
-        qarg='?bref=',
-        bkarg='name',
-        cvsep=':',
-        bksep=' ',
-        vsrsep='-',
-        chrsep=u'\u2013',
-        bkrsep=u'\u2014',
-        comma=', ',
-        semicolon='; ',
+        uri="",
+        qarg="?bref=",
+        bkarg="name",
+        cvsep=":",
+        bksep=" ",
+        vsrsep="-",
+        chrsep="\u2013",
+        bkrsep="\u2014",
+        comma=", ",
+        semicolon="; ",
     ):
         """Format the output of RefParser.parse(), which is a list of Ref tuples.
         Usage:
@@ -620,7 +621,7 @@ class RefParser(Dict):
         >>> p.format(html=True, bkarg='title_es')
         u"<a href='?bref=Exod.3.2---Lev.4.5'>\\xc9xodo 3:2---L\\xe9vitico 4:5</a>"
         """
-        # ## ** NOTE REGARDING THE minimize PARAMETER ** 
+        # ## ** NOTE REGARDING THE minimize PARAMETER **
         # I would like to include a test for whether the formatted output includes verse
         # numbers when we have the whole chapter, but that requires significant
         # refactoring and retesting of the code. So for now, unless we can find another
@@ -638,11 +639,11 @@ class RefParser(Dict):
         # KLUDGE: fix Psalm vs Psalms
         for ref in inrefs:
             if (
-                ref[0].title == 'Psalms'
+                ref[0].title == "Psalms"
                 and ref[0].bk == ref[1].bk
                 and ref[0].ch == ref[1].ch
             ):
-                ref[0].title = ref[1].title = 'Psalm'
+                ref[0].title = ref[1].title = "Psalm"
 
         currch = 0
         currvs = 0
@@ -656,18 +657,18 @@ class RefParser(Dict):
                 endref.vsub = endref.vsub.strip("_")
             if currbk == startref.bk or with_bk == False:
                 if currch == startref.ch:
-                    startrefstr = "%s%s%s" % (comma, startref.vs, startref.vsub or '')
+                    startrefstr = "%s%s%s" % (comma, startref.vs, startref.vsub or "")
                 else:
-                    if out != '':
-                        out += '; '
+                    if out != "":
+                        out += "; "
                     startrefstr = "%s%s%s%s" % (
                         startref.ch,
                         cvsep,
                         startref.vs,
-                        startref.vsub or '',
+                        startref.vsub or "",
                     )
             else:
-                if out != '':
+                if out != "":
                     out += semicolon
                 startrefstr = "%s%s%s%s%s%s" % (
                     startref[bkarg],
@@ -675,7 +676,7 @@ class RefParser(Dict):
                     startref.ch,
                     cvsep,
                     startref.vs,
-                    startref.vsub or '',
+                    startref.vsub or "",
                 )
 
             currbk, currch, currvs = startref.bk, startref.ch, startref.vs
@@ -687,14 +688,14 @@ class RefParser(Dict):
                     if currvs == endref.vs:
                         endrefstr = ""
                     else:  # one hyphen to separate a vs
-                        endrefstr = "%s%s%s" % (vsrsep, endref.vs, endref.vsub or '')
+                        endrefstr = "%s%s%s" % (vsrsep, endref.vs, endref.vsub or "")
                 else:  # default -- to cvsep. ch:vs
                     endrefstr = "%s%s%s%s%s" % (
                         chrsep,
                         endref.ch,
                         cvsep,
                         endref.vs,
-                        endref.vsub or '',
+                        endref.vsub or "",
                     )
             else:  # default --- to cvsep. bk ch:vs
                 if bkarg not in endref and bkarg in startref:
@@ -706,7 +707,7 @@ class RefParser(Dict):
                     endref.ch,
                     cvsep,
                     endref.vs,
-                    endref.vsub or '',
+                    endref.vsub or "",
                 )
 
             if (
@@ -715,7 +716,7 @@ class RefParser(Dict):
                 if uri is None:
                     uri = ""
                 if qarg is None:
-                    qarg = ''
+                    qarg = ""
                 term = self.clean_refstring(
                     ("%(bk)s.%(ch)s.%(vs)s" % startref) + endrefstr
                 )
@@ -732,32 +733,32 @@ class RefParser(Dict):
         """given a ref id or ids, return a reference string.
         The ids string is one or more refids, separated by hyphens (ranges) and commas (instances)
         """
-        range_ids = [id.strip() for id in ids.split(',') if id.strip() != '']
+        range_ids = [id.strip() for id in ids.split(",") if id.strip() != ""]
         range_refstrs = []
         for range_id in range_ids:
             range_refstrs.append(
-                '-'.join(
+                "-".join(
                     [
                         self.refstr_from_id(rid.strip())
-                        for rid in range_id.split('-')
-                        if rid.strip() != ''
+                        for rid in range_id.split("-")
+                        if rid.strip() != ""
                     ]
                 )
             )
-        refstr = self.refstring(self.parse(';'.join(range_refstrs)))
+        refstr = self.refstring(self.parse(";".join(range_refstrs)))
         return refstr
 
     def refstr_from_id(self, id):
         """given a ref id in the canon, return a reference string."""
-        idstr = re.sub(r'(^[^\d]+|[^\d]+$)', '', id).replace('000000', '')
-        idstr = re.sub(r'000$', '', idstr)
-        idstr = re.sub(r'000$', '', idstr)
+        idstr = re.sub(r"(^[^\d]+|[^\d]+$)", "", id).replace("000000", "")
+        idstr = re.sub(r"000$", "", idstr)
+        idstr = re.sub(r"000$", "", idstr)
         if len(idstr) < 4:  # book
-            key = idstr.zfill(3) + '001001'
+            key = idstr.zfill(3) + "001001"
             ref0 = Ref.from_key(key, self.canon)
             return f"{ref0.name}"
         elif len(idstr) < 7:  # ch
-            key = idstr.zfill(6) + '001'
+            key = idstr.zfill(6) + "001"
             ref0 = Ref.from_key(key, self.canon)
             return f"{ref0.name}.{ref0.ch}"
         else:  # vs

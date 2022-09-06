@@ -1,7 +1,8 @@
 from bl.dict import Dict
-from .ns import NS
 from bxml import XML
 from bxml.builder import Builder
+
+from .ns import NS
 
 
 class Book(Dict):
@@ -10,20 +11,20 @@ class Book(Dict):
         # xml.assertValid()
         assert xml.root.tag == "{%(bl)s}book" % NS
         book = C(
-            id=xml.root.get('id'),
-            name=xml.root.get('name'),
-            title=xml.root.find('{%(bl)s}title' % NS).text,
-            pattern=xml.root.find('{%(bl)s}pattern' % NS).text,
+            id=xml.root.get("id"),
+            name=xml.root.get("name"),
+            title=xml.root.find("{%(bl)s}title" % NS).text,
+            pattern=xml.root.find("{%(bl)s}pattern" % NS).text,
             chapters=[
                 Dict(**chapter.attrib)
-                for chapter in xml.root.find('{%(bl)s}chapters' % NS).getchildren()
+                for chapter in xml.root.find("{%(bl)s}chapters" % NS).getchildren()
             ],
         )
         for e in [
             e
             for e in xml.root.xpath("*")
             if e.tag.replace("{%(bl)s}" % NS, "")
-            not in ['title', 'pattern', 'chapters']
+            not in ["title", "pattern", "chapters"]
         ]:
             attr = e.tag.replace("{%(bl)s}" % NS, "")
             book[attr] = e.text
@@ -35,9 +36,9 @@ class Book(Dict):
             fn=fn,
             config=config,
             root=E.book(
-                {'id': self.id, 'name': self.name},
-                E.title(self.title or ''),
-                E.pattern(self.pattern or ''),
+                {"id": self.id, "name": self.name},
+                E.title(self.title or ""),
+                E.pattern(self.pattern or ""),
                 E.chapters([E.chapter(**chapter) for chapter in self.chapters]),
             ),
         )

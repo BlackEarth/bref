@@ -1,4 +1,5 @@
-import re, functools
+import functools
+import re
 
 
 @functools.total_ordering
@@ -29,7 +30,7 @@ class RefRange(list):
 
     def __hash__(self):
         # if __eq__() true, __hash__() will be the same (though the inverse is not true)
-        return int(re.sub('\D', '', self[0].key() + self[1].key()))
+        return int(re.sub("\D", "", self[0].key() + self[1].key()))
 
     def contains(self, other):
         return self[0] <= other[0] and self[1] >= other[1]

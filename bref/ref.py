@@ -1,5 +1,6 @@
 import functools
 import re
+
 from bl.dict import Dict
 
 
@@ -25,10 +26,10 @@ class Ref(Dict):
     def __str__(self):
         "returns this Ref as a normalized string"
         r = "%s.%d.%d%s" % (
-            self.name or str(self.id) or '',
+            self.name or str(self.id) or "",
             self.ch or 0,
             self.vs or 0,
-            self.vsub or '',
+            self.vsub or "",
         )
         return r
 
@@ -40,14 +41,14 @@ class Ref(Dict):
         elif self.name is not None:
             k += self.name
         else:
-            k += '000'
-        k += "%03d%03d%s" % (self.ch or 0, self.vs or 0, self.vsub or '')
+            k += "000"
+        k += "%03d%03d%s" % (self.ch or 0, self.vs or 0, self.vsub or "")
         return k
 
     @classmethod
     def from_key(Class, key, canon):
         """use a given canon to convert a key into a ref"""
-        id, ch, vs = [n.lstrip('0') for n in re.findall(r'(\d{3})', key.zfill(9))]
+        id, ch, vs = [n.lstrip("0") for n in re.findall(r"(\d{3})", key.zfill(9))]
         ref = Class(id=id, ch=ch, vs=vs)
         md = re.search("([a-z]+)$", key, flags=re.I)
         if md is not None:

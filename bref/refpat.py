@@ -1,6 +1,8 @@
 DEBUG = False
 
-import re, os, sys
+import os
+import re
+import sys
 
 
 def book_pattern(canon):
@@ -81,7 +83,7 @@ def make_patterns(canon):
     # compile all the patterns
     regexs = [re.compile(pat) for pat in patterns]
 
-    return {'patterns': patterns, 'repeating': repeating, 'regexs': regexs}
+    return {"patterns": patterns, "repeating": repeating, "regexs": regexs}
 
 
 def tag_refs_in_text(text, patterns, refparser=None, bk=None):
@@ -99,8 +101,8 @@ def tag_refs_in_text(text, patterns, refparser=None, bk=None):
         return tagged
 
     # get the first item ref to provide a book as context
-    for regex in patterns['regexs']:
-        if patterns['regexs'].index(regex) in patterns['repeating']:
+    for regex in patterns["regexs"]:
+        if patterns["regexs"].index(regex) in patterns["repeating"]:
             t = re.sub(regex, repl_bref, text)
             while t != text:
                 text = t
@@ -117,10 +119,14 @@ def tag_refs_in_xml(x, patterns, xpath=None, namespaces=None, refparser=None, bk
     else:
         elements = x.xpath(x.root, xpath, namespaces=namespaces)
     for element in elements:
-        if element.text is not None and element.get('href') is None:
-            element.text = tag_refs_in_text(element.text, patterns, refparser=refparser, bk=bk)
+        if element.text is not None and element.get("href") is None:
+            element.text = tag_refs_in_text(
+                element.text, patterns, refparser=refparser, bk=bk
+            )
         if element.tail is not None:
-            element.tail = tag_refs_in_text(element.tail, patterns, refparser=refparser, bk=bk)
+            element.tail = tag_refs_in_text(
+                element.tail, patterns, refparser=refparser, bk=bk
+            )
     t = re.sub("&lt;(ref[^&>]+)&gt;", r"<\1>", x.tostring()).replace(
         "&lt;/ref&gt;", "</ref>"
     )

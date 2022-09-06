@@ -1,3 +1,3 @@
 NS = {
-    'bl': "http://blackearth.us/xml",
+    "bl": "http://blackearth.us/xml",
 }

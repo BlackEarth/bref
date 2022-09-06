@@ -1,9 +1,9 @@
 from bl.dict import Dict
-from .ns import NS
 from bxml import XML
 from bxml.builder import Builder
 
 from .book import Book
+from .ns import NS
 
 
 class Canon(Dict):
@@ -15,8 +15,8 @@ class Canon(Dict):
         # xml.assertValid()
         assert xml.root.tag == "{%(bl)s}canon" % NS
         canon = C(
-            name=xml.root.get('name'),
-            lang=xml.root.get('lang'),
+            name=xml.root.get("name"),
+            lang=xml.root.get("lang"),
             books=[
                 Book.from_xml(XML(root=book, config=xml.config))
                 for book in xml.root.getchildren()
@@ -27,7 +27,7 @@ class Canon(Dict):
     def to_xml(self, fn=None, config=None):
         E = Builder.single(NS)
         x = XML(
-            fn=fn, config=config, root=E.canon({'name': self.name, 'lang': self.lang})
+            fn=fn, config=config, root=E.canon({"name": self.name, "lang": self.lang})
         )
         for book in self.books:
             x.root.append(book.to_xml().root)
