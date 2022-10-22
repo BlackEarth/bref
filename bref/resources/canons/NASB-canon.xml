@@ -596,7 +596,7 @@
 	</book>
 	<book name="Psalms" id="19">
 		<title>Psalms</title>
-		<pattern></pattern>
+		<pattern>\b(Psalms?)\b</pattern>
 		<chapters>
 			<chapter vss="6" n="1"/>
 			<chapter vss="12" n="2"/>
@@ -805,9 +805,9 @@
 			<chapter vss="14" n="12"/>
 		</chapters>
 	</book>
-	<book name="SongofSolomon" id="22">
+	<book name="Solomon" id="22">
 		<title>Song of Solomon</title>
-		<pattern></pattern>
+		<pattern>\b(?:Song of)? ?(Solomon|Songs?)\b</pattern>
 		<chapters>
 			<chapter vss="17" n="1"/>
 			<chapter vss="17" n="2"/>
