@@ -1,16 +1,15 @@
-DEBUG = False
-
-import os
 import re
-import sys
 
 
 def book_pattern(canon):
     return "(?:(?:" + "|".join([bk.pattern for bk in canon.books]) + ")\\.?)"
 
 
-def book_replacer(canon, attr, flags=re.I):
-    """create a function that can be used in re.sub() to replace a found book name with the given book attribute"""
+def book_replacer(canon, attr, flags=re.IGNORECASE):
+    """
+    Create a function that can be used in re.sub() to replace a found book name with the
+    given book attribute
+    """
 
     def br(md):
         text = md.group(0)
@@ -28,17 +27,17 @@ def full_books_pattern(canon):
 def make_patterns(canon):
     # == Build the regexps for finding references in text ==
     patterns = []
-    repeating = (
-        []
-    )  # list of indexes of patterns that should be repeated until the result is the same as the input
+    # list of indexes of patterns that should be repeated until the result is the same
+    # as the input
+    repeating = []
 
     # building blocks
     bkpat = book_pattern(canon)
-    fullbkpat = full_books_pattern(canon)
+    # fullbkpat = full_books_pattern(canon)
     chpat = "(?:[1-9][0-9]*[a-f]{0,2}\\b)"
     vspat = "(?:[\\.:]?[1-9][0-9]*[a-f]{0,2}\\b)"
     sepat = "\\s*(?:[,\\-\u2013\u2014]?)+\\s*"
-    sepatand = "\\s*(?:[,\\-\u2013\u2014]?(?: and)?)+\\s*"
+    # sepatand = "\\s*(?:[,\\-\u2013\u2014]?(?: and)?)+\\s*"
 
     # == patterns ==
 
@@ -132,7 +131,7 @@ def tag_refs_in_xml(x, patterns, xpath=None, namespaces=None, refparser=None, bk
     )
     try:
         x.root = x.fromstring(t)
-    except:
+    except Exception:
         print(t)
         raise
 

@@ -81,7 +81,7 @@ class RefParser(Dict):
             refstring = self.clean_refstring(refstring)
         LOG.debug("%s %s" % (refstring, "[" + (bk or "") + "]"))
 
-        tokens = re.split("([.,;\-] ?)", refstring)  # sequence of tokens
+        tokens = re.split(r"([.,;\-] ?)", refstring)  # sequence of tokens
 
         # look for 'f' or 'ff' at the end of numeric tokens
         for i in range(len(tokens) - 1, 0, -1):  # count backwards to avoid conflict
@@ -340,9 +340,9 @@ class RefParser(Dict):
         Usage:
         >>> import bibleweb; db=bibleweb.db(); refparser=RefParser(db)
         >>> refparser.clean_refstring("Gen 3:5-4:7; 5:8-10; Exod 3:2-Lev 4:5")
-        u'Gen.3.5-4.7;5.8-10;Exod.3.2-Lev.4.5'
+        'Gen.3.5-4.7;5.8-10;Exod.3.2-Lev.4.5'
         >>> refparser.clean_refstring("Song of Songs 4 8 -- 5_3")
-        u'SongofSongs.4.8-5.3'
+        'SongofSongs.4.8-5.3'
         """
         if refstr is None:
             return None
@@ -392,7 +392,7 @@ class RefParser(Dict):
         refstr = refstr.replace(", ", ",")
         refstr = refstr.replace(" ;", ";")
         refstr = refstr.replace("; ", ";")
-        refstr = re.sub("([123])\s+([A-Za-z])", r"\1\2", refstr)
+        refstr = re.sub(r"([123])\s+([A-Za-z])", r"\1\2", refstr)
         # refstr = refstr.replace('1 ', '1')
         # refstr = refstr.replace('2 ', '2')
         # refstr = refstr.replace('3 ', '3')
@@ -433,14 +433,14 @@ class RefParser(Dict):
             self.clean_intstr(rng[1].ch) or self.chapters_in(rng[0].bk)
         )  # rng[1].ch
         if type(rng[0].vs) == str:
-            sub = re.search("[^0-9\W]+$", rng[0].vs)  # rng[0].vs
+            sub = re.search(r"[^0-9\W]+$", rng[0].vs)  # rng[0].vs
             intstr = self.clean_intstr(rng[0].vs)
             if sub is not None and type(intstr) == str and intstr in rng[0].vs:
                 LOG.debug("rng[0].vsub = %r" % sub.group(0))
                 rng[0].vsub = sub.group(0)
             rng[0].vs = int(self.clean_intstr(rng[0].vs) or 1)
         if type(rng[1].vs) == str:
-            sub = re.search("[^0-9\W]+$", rng[1].vs)  # rng[1].vs
+            sub = re.search(r"[^0-9\W]+$", rng[1].vs)  # rng[1].vs
             intstr = self.clean_intstr(rng[1].vs)
             if sub is not None and type(intstr) == str and intstr in rng[1].vs:
                 LOG.debug("rng[1].vsub = %r" % sub.group(0))
@@ -455,25 +455,43 @@ class RefParser(Dict):
     def fill_range(self, rng):
         """fill a range that does not have all the verses defined.
         Spec:
-        >>> import bibleweb; from bibleweb.models import bible_ref; db=bibleweb.db(); rp=RefParser(db)
-        >>> rp.fill_range(bible_ref.RefRange((bible_ref.Ref(db), bible_ref.Ref(db)))).display()
-        (u'', u'')
-        >>> rp.fill_range(bible_ref.RefRange((bible_ref.Ref(db, bk='Gen'), bible_ref.Ref(db)))).display()
-        (u'Gen 1:1', u'Gen 50:26')
-        >>> rp.fill_range(bible_ref.RefRange((bible_ref.Ref(db, bk='Gen', ch=3), bible_ref.Ref(db)))).display()
-        (u'Gen 3:1', u'Gen 3:24')
-        >>> rp.fill_range(bible_ref.RefRange((bible_ref.Ref(db, bk='Gen', ch=3, vs=15), bible_ref.Ref(db)))).display()
-        (u'Gen 3:15', u'Gen 3:15')
-        >>> rp.fill_range(bible_ref.RefRange((bible_ref.Ref(db, bk='Gen', ch=3, vs=15), bible_ref.Ref(db, vs=17)))).display()
-        (u'Gen 3:15', u'Gen 3:17')
-        >>> rp.fill_range(bible_ref.RefRange((bible_ref.Ref(db, bk='Gen', ch=3), bible_ref.Ref(db, ch=4)))).display()
-        (u'Gen 3:1', u'Gen 4:26')
-        >>> rp.fill_range(bible_ref.RefRange((bible_ref.Ref(db, bk='Gen', ch=3, vs=15), bible_ref.Ref(db, ch=4, vs=17)))).display()
-        (u'Gen 3:15', u'Gen 4:17')
+        >>> import bibleweb
+        >>> from bibleweb.models import bible_ref
+        >>> db=bibleweb.db()
+        >>> rp=RefParser(db)
+        >>> rp.fill_range(
+        ...     bible_ref.RefRange(
+        ...         (bible_ref.Ref(db), bible_ref.Ref(db)))).display()
+        ('', '')
+        >>> rp.fill_range(
+        ...     bible_ref.RefRange(
+        ...         (bible_ref.Ref(db, bk='Gen'), bible_ref.Ref(db)))).display()
+        ('Gen 1:1', 'Gen 50:26')
+        >>> rp.fill_range(
+        ...     bible_ref.RefRange(
+        ...         (bible_ref.Ref(db, bk='Gen', ch=3), bible_ref.Ref(db)))).display()
+        ('Gen 3:1', 'Gen 3:24')
+        >>> rp.fill_range(
+        ...     bible_ref.RefRange(
+        ...         (bible_ref.Ref(db, bk='Gen', ch=3, vs=15), bible_ref.Ref(db)))).display()
+        ('Gen 3:15', 'Gen 3:15')
+        >>> rp.fill_range(
+        ...     bible_ref.RefRange(
+        ...         (bible_ref.Ref(db, bk='Gen', ch=3, vs=15), bible_ref.Ref(db, vs=17)))).display()
+        ('Gen 3:15', 'Gen 3:17')
+        >>> rp.fill_range(
+        ...     bible_ref.RefRange(
+        ...         (bible_ref.Ref(db, bk='Gen', ch=3), bible_ref.Ref(db, ch=4)))).display()
+        ('Gen 3:1', 'Gen 4:26')
+        >>> rp.fill_range(
+        ...     bible_ref.RefRange(
+        ...         (bible_ref.Ref(db, bk='Gen', ch=3, vs=15),
+        ...         bible_ref.Ref(db, ch=4, vs=17)))).display()
+        ('Gen 3:15', 'Gen 4:17')
         """
         LOG.debug(
             "fill range: %r"
-            % [(rng[0].bk, rng[0].ch, rng[0].vs), (rng[1].bk, rng[1].ch, rng[1].vs)]
+            % ([(rng[0].bk, rng[0].ch, rng[0].vs), (rng[1].bk, rng[1].ch, rng[1].vs)],)
         )
         status = None
         if rng[0].bk is not None:
@@ -507,12 +525,14 @@ class RefParser(Dict):
                                 rng[1].ch = rng[0].ch
                                 rng[1].vs = rng[0].vs
                             else:
-                                # rng[0] is full, rng[1].bk is not None, the range is to the end of the second bk
+                                # rng[0] is full, rng[1].bk is not None, the range is to
+                                # the end of the second bk
                                 status = "the range is to the end of the second bk"
                                 rng[1].ch = self.chapters_in(rng[1].bk)
                                 rng[1].vs = self.verses_in(rng[1].bk, rng[1].ch)
                         else:
-                            # rng[0] is full, rng[1].ch is not None, so the range is in the same book, to the end of the second ch.
+                            # rng[0] is full, rng[1].ch is not None, so the range is in
+                            # the same book, to the end of the second ch.
                             status = "the range is in the same book, to the end of the second ch."
                             rng[1].bk = rng[0].bk
                             rng[1].ch = self.chapters_in(rng[1].bk)
@@ -525,7 +545,8 @@ class RefParser(Dict):
                         if rng[1].bk is None:
                             rng[1].bk = rng[0].bk
                 else:
-                    # rng[0].vs is None, but rng[0].ch and .bk are defined, so it's either a whole chapter or a range of chapters
+                    # rng[0].vs is None, but rng[0].ch and .bk are defined, so it's
+                    # either a whole chapter or a range of chapters
                     status = "it's either a whole chapter or a range of chapters"
                     rng[0].wholech = True
                     rng[0].vs = 1
@@ -540,7 +561,8 @@ class RefParser(Dict):
                         rng[1].vs = self.verses_in(rng[1].bk, rng[1].ch) or 0
                         status += ", rng[1].vs=%s" % (str(rng[1].vs))
             else:
-                # rng[0].ch is None, but rng[0].bk is defined, so it's either a verse or range in a one ch book, or a range of books
+                # rng[0].ch is None, but rng[0].bk is defined, so it's either a verse or
+                # range in a one ch book, or a range of books
                 if rng[0].vs is not None:  # vs or rng in one-chapter book
                     status = "it's a vs or rng in a one-chapter book."
                     rng[0].ch = 1
@@ -567,7 +589,7 @@ class RefParser(Dict):
         LOG.debug("=> %s" % status)
         LOG.debug(
             "filled range: %r"
-            % [(rng[0].bk, rng[0].ch, rng[0].vs), (rng[1].bk, rng[1].ch, rng[1].vs)]
+            % ([(rng[0].bk, rng[0].ch, rng[0].vs), (rng[1].bk, rng[1].ch, rng[1].vs)],)
         )
         rng[0].name = rng[0].bk
         rng[1].name = rng[1].bk
@@ -613,9 +635,9 @@ class RefParser(Dict):
         >>> import bibleweb; db=bibleweb.db(); refparser=BibleRefParser(db)
         >>> p = refparser.parse("Exod 3:2-Lev 4:5")
         >>> p.format()
-        u'Exod 3:2---Lev 4:5'
+        'Exod 3:2---Lev 4:5'
         >>> p.format(cvsep='.', bkarg='title_es')
-        u'\\xc9xodo 3.2---L\\xe9vitico 4.5'
+        '\\xc9xodo 3.2---L\\xe9vitico 4.5'
         >>> p.format(html=True, bkarg='title')
         u"<a href='?bref=Exod.3.2---Lev.4.5'>Exodus 3:2---Leviticus 4:5</a>"
         >>> p.format(html=True, bkarg='title_es')
@@ -655,7 +677,7 @@ class RefParser(Dict):
                 startref.vsub = startref.vsub.strip("_")  # vsub shd be a letter only.
             if endref is not None and endref.vsub is not None:
                 endref.vsub = endref.vsub.strip("_")
-            if currbk == startref.bk or with_bk == False:
+            if currbk == startref.bk or with_bk is False:
                 if currch == startref.ch:
                     startrefstr = "%s%s%s" % (comma, startref.vs, startref.vsub or "")
                 else:
@@ -683,7 +705,7 @@ class RefParser(Dict):
 
             if endref is None or endref == {}:
                 endrefstr = ""
-            elif currbk == endref.bk or with_bk == False:
+            elif currbk == endref.bk or with_bk is False:
                 if currch == endref.ch:
                     if currvs == endref.vs:
                         endrefstr = ""
@@ -710,9 +732,8 @@ class RefParser(Dict):
                     endref.vsub or "",
                 )
 
-            if (
-                html == True
-            ):  # format the output to be a list of html links to the given href
+            if html is True:
+                # format the output to be a list of html links to the given href
                 if uri is None:
                     uri = ""
                 if qarg is None:
@@ -770,66 +791,72 @@ class RefParser(Dict):
 def test_parse():
     """
     >>> import bibleweb; db=bibleweb.db(); rp=RefParser(db)
-    >>> rp.parse('Ps 24, 26; 28:8-10').display()                    # comma to separate whole chapters
-    [(u'Ps 24:1', u'Ps 24:10'), (u'Ps 26:1', u'Ps 26:12'), (u'Ps 28:8', u'Ps 28:10')]
+    # comma to separate whole chapters
+    >>> rp.parse('Ps 24, 26; 28:8-10').display()
+    [('Ps 24:1', 'Ps 24:10'), ('Ps 26:1', 'Ps 26:12'), ('Ps 28:8', 'Ps 28:10')]
     >>> rp.parse('Song of Songs 7.1 - 8.5').display()
-    [(u'Song 7:1', u'Song 8:5')]
+    [('Song 7:1', 'Song 8:5')]
     >>> rp.parse('Gen, Exod').display()
-    [(u'Gen 1:1', u'Gen 50:26'), (u'Exod 1:1', u'Exod 40:38')]
+    [('Gen 1:1', 'Gen 50:26'), ('Exod 1:1', 'Exod 40:38')]
     >>> rp.parse('1Kgs 21-2Kgs 22').display()
-    [(u'1Kgs 21:1', u'2Kgs 22:20')]
+    [('1Kgs 21:1', '2Kgs 22:20')]
     >>> rp.parse('Gen, Exod 1').display()
-    [(u'Gen 1:1', u'Gen 50:26'), (u'Exod 1:1', u'Exod 1:22')]
+    [('Gen 1:1', 'Gen 50:26'), ('Exod 1:1', 'Exod 1:22')]
     >>> rp.parse('Gen - Exod 1').display()
-    [(u'Gen 1:1', u'Exod 1:22')]
+    [('Gen 1:1', 'Exod 1:22')]
     >>> rp.parse('Gen 1, 2').display()
-    [(u'Gen 1:1', u'Gen 1:31'), (u'Gen 2:1', u'Gen 2:25')]
+    [('Gen 1:1', 'Gen 1:31'), ('Gen 2:1', 'Gen 2:25')]
     >>> rp.parse('Gen 1 - 2').display()
-    [(u'Gen 1:1', u'Gen 2:25')]
+    [('Gen 1:1', 'Gen 2:25')]
     >>> rp.parse('Gen 1:1 - 2').display()
-    [(u'Gen 1:1', u'Gen 1:2')]
+    [('Gen 1:1', 'Gen 1:2')]
     >>> rp.parse('Gen 1:1 - 2:5').display()
-    [(u'Gen 1:1', u'Gen 2:5')]
+    [('Gen 1:1', 'Gen 2:5')]
     >>> rp.parse('Gen 1 - 2:5').display()
-    [(u'Gen 1:1', u'Gen 2:5')]
+    [('Gen 1:1', 'Gen 2:5')]
     >>> rp.parse('Gen 1 - 2:5, 7, 9-10').display()
-    [(u'Gen 1:1', u'Gen 2:5'), (u'Gen 2:7', u'Gen 2:7'), (u'Gen 2:9', u'Gen 2:10')]
+    [('Gen 1:1', 'Gen 2:5'), ('Gen 2:7', 'Gen 2:7'), ('Gen 2:9', 'Gen 2:10')]
     >>> rp.parse('Gen - Rev').display()
-    [(u'Gen 1:1', u'Rev 22:21')]
+    [('Gen 1:1', 'Rev 22:21')]
     >>> rp.parse('Obad 1-2').display()
-    [(u'Obad 1:1', u'Obad 1:2')]
+    [('Obad 1:1', 'Obad 1:2')]
     >>> rp.parse('3Jn 1:1-4').display()
-    [(u'3Jn 1:1', u'3Jn 1:4')]
+    [('3Jn 1:1', '3Jn 1:4')]
     >>> rp.parse('3Jn 1').display()
-    [(u'3Jn 1:1', u'3Jn 1:15')]
+    [('3Jn 1:1', '3Jn 1:15')]
     >>> rp.parse('3Jn').display()
-    [(u'3Jn 1:1', u'3Jn 1:15')]
+    [('3Jn 1:1', '3Jn 1:15')]
     >>> rp.parse('Gen 34:8').display()
-    [(u'Gen 34:8', u'Gen 34:8')]
+    [('Gen 34:8', 'Gen 34:8')]
     >>> rp.parse('Gen 34:8-Deut').display()
-    [(u'Gen 34:8', u'Deut 34:12')]
+    [('Gen 34:8', 'Deut 34:12')]
     >>> rp.parse('Gen 34:8, Deut').display()
-    [(u'Gen 34:8', u'Gen 34:8'), (u'Deut 1:1', u'Deut 34:12')]
+    [('Gen 34:8', 'Gen 34:8'), ('Deut 1:1', 'Deut 34:12')]
     >>> rp.parse('Gen 34:8; Deut').display()
-    [(u'Gen 34:8', u'Gen 34:8'), (u'Deut 1:1', u'Deut 34:12')]
+    [('Gen 34:8', 'Gen 34:8'), ('Deut 1:1', 'Deut 34:12')]
     >>> rp.parse('Obad 1,3').display()
-    [(u'Obad 1:1', u'Obad 1:1'), (u'Obad 1:3', u'Obad 1:3')]
+    [('Obad 1:1', 'Obad 1:1'), ('Obad 1:3', 'Obad 1:3')]
     >>> rp.parse('Gen 1,3').display()
-    [(u'Gen 1:1', u'Gen 1:31'), (u'Gen 3:1', u'Gen 3:24')]
+    [('Gen 1:1', 'Gen 1:31'), ('Gen 3:1', 'Gen 3:24')]
     >>> rp.parse('Gen 1:1,3').display()
-    [(u'Gen 1:1', u'Gen 1:1'), (u'Gen 1:3', u'Gen 1:3')]
+    [('Gen 1:1', 'Gen 1:1'), ('Gen 1:3', 'Gen 1:3')]
     >>> rp.parse('Gen 1:1;3').display()
-    [(u'Gen 1:1', u'Gen 1:1'), (u'Gen 3:1', u'Gen 3:24')]
-    >>> rp.parse('Obad 1;3').display()                          # this is a pretty tough edge case - what does the user intend?
-    [(u'Obad 1:1', u'Obad 1:21'), (u'Obad 1:3', u'Obad 1:3')]
-    >>> rp.parse('Obad 1-3; 1Jn 5').display()                   # another corner case that I just solved
-    [(u'Obad 1:1', u'Obad 1:3'), (u'1Jn 5:1', u'1Jn 5:21')]
-    >>> rp.parse('Something 1:5')                               # it looks like a reference, but it's not
+    [('Gen 1:1', 'Gen 1:1'), ('Gen 3:1', 'Gen 3:24')]
+    # this is a pretty tough edge case - what does the user intend?
+    >>> rp.parse('Obad 1;3').display()
+    [('Obad 1:1', 'Obad 1:21'), ('Obad 1:3', 'Obad 1:3')]
+    # another corner case that I just solved
+    >>> rp.parse('Obad 1-3; 1Jn 5').display()
+    [('Obad 1:1', 'Obad 1:3'), ('1Jn 5:1', '1Jn 5:21')]
+    # it looks like a reference, but it's not
+    >>> rp.parse('Something 1:5')
     []
-    >>> rp.parse('Gen 50 - Exod 1').display()                   # chapter range across books should work fine.
-    [(u'Gen 50:1', u'Exod 1:22')]
-    >>> rp.parse('2Jn.001.001 - Jude.001.025').display()        # it should handle refs correctly.
-    [(u'2Jn 1:1', u'Jude 1:25')]
+    # chapter range across books should work fine.
+    >>> rp.parse('Gen 50 - Exod 1').display()
+    [('Gen 50:1', 'Exod 1:22')]
+    # it should handle refs correctly.
+    >>> rp.parse('2Jn.001.001 - Jude.001.025').display()
+    [('2Jn 1:1', 'Jude 1:25')]
     """
 
 
