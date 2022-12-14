@@ -683,27 +683,37 @@ class RefParser(Dict):
                 else:
                     if out != "":
                         out += "; "
-                    startrefstr = "%s%s%s%s" % (
+                    if startref.wholech is True:
+                        startrefstr = "%s" % startref.ch
+                    else:
+                        startrefstr = "%s%s%s%s" % (
+                            startref.ch,
+                            cvsep,
+                            startref.vs,
+                            startref.vsub or "",
+                        )
+            else:
+                if out != "":
+                    out += semicolon
+                if startref.wholech is True:
+                    startrefstr = "%s%s%s" % (
+                        startref[bkarg],
+                        bksep,
+                        startref.ch,
+                    )
+                else:
+                    startrefstr = "%s%s%s%s%s%s" % (
+                        startref[bkarg],
+                        bksep,
                         startref.ch,
                         cvsep,
                         startref.vs,
                         startref.vsub or "",
                     )
-            else:
-                if out != "":
-                    out += semicolon
-                startrefstr = "%s%s%s%s%s%s" % (
-                    startref[bkarg],
-                    bksep,
-                    startref.ch,
-                    cvsep,
-                    startref.vs,
-                    startref.vsub or "",
-                )
 
             currbk, currch, currvs = startref.bk, startref.ch, startref.vs
 
-            if endref is None or endref == {}:
+            if endref is None or endref == {} or startref.wholech is True:
                 endrefstr = ""
             elif currbk == endref.bk or with_bk is False:
                 if currch == endref.ch:
